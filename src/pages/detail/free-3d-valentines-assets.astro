@@ -4,7 +4,11 @@ import DetailHeader from "../../components/DetailHeader.astro";
 import DetailPostLayout from "../../layouts/DetailPostLayout.astro";
 import CallToAction from "../../components/CallToAction.astro";
 
-const images = await Astro.glob('../../assets/projects/free-3d-valentines-assets/*.{jpg,png,webp}');
+const images = Object.values(
+	import.meta.glob<{ default: ImageMetadata }>('../../assets/projects/free-3d-valentines-assets/*.{jpg,png,webp}', {
+		eager: true,
+	})
+);
 
 
 ---

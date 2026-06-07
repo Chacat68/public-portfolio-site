@@ -15,9 +15,9 @@ const { tag, description } = Astro.props;
                 <div class="title-tag">
                     {tag}
                 </div>
-                <div class="header-title">
+                <h1 class="header-title font-huiwen">
                     <slot />
-                </div>
+                </h1>
 			</div>
 			<div class="section-desc" >
 				<div class="section-saying">
@@ -54,8 +54,8 @@ const { tag, description } = Astro.props;
         margin-right: auto;
         text-align: center;
         h1{
-            font-size: 60px;
-            font-size: 3.75rem;
+            font-size: 72px;
+            font-size: 4rem;
             line-height: 1.2;
             font-weight: 500;
         }
@@ -106,6 +106,7 @@ const { tag, description } = Astro.props;
         p{
             font-size: 0.875rem;
             margin-bottom:0.5em;
+            text-align: center;
         }
         a:link{
             color:#11A371;
@@ -136,20 +137,19 @@ const { tag, description } = Astro.props;
 }
 @media(max-width: 1023px) {
     .section-title h1{
-        font-size: 3rem;
+        font-size: 3.75rem;
     }
 }
-@media(max-width: 812px) {
-    .section-title h1{
-        font-size: 2.5rem;
-    }
-}
+
 @media(max-width: 767px) {
     .section-content{
         align-items: center;
     }
     .section-author{
        justify-content: center;
+    }
+    .section-title h1{
+        font-size: 3rem;
     }
 
 }

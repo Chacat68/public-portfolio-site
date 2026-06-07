@@ -1,5 +1,6 @@
 ---
 import {nav} from '../data/content';
+import GitHubStars from './GitHubStars.astro';
 ---
 
 <div class="mobile-header">
@@ -30,9 +31,12 @@ import {nav} from '../data/content';
 								</a>
 							</li>
 							))}
+							<li class="m-menu-li m-menu-li--github">
+								<GitHubStars />
+							</li>
 							<li class="m-menu-li">
 									<div class="theme-toggle" style="transform:scale(1.1);" >
-	
+
 									</div>
 							</li>
 				</ul>
@@ -194,7 +198,11 @@ import {nav} from '../data/content';
     a.m-menu__link{
       position: relative;
       display: inline-block;
-			font-size:2rem;
+			font-size:1.5rem;
+    }
+    &--github{
+      padding-top: 1vh;
+      padding-bottom: 1vh;
     }
   }
   &__icon{

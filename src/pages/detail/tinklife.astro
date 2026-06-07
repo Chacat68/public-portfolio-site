@@ -2,8 +2,12 @@
 import { Image } from "astro:assets";
 import DetailPostLayout from "../../layouts/DetailPostLayout.astro";
 import PostHeader from "../../components/PostHeader.astro";
+const images = Object.values(
+	import.meta.glob<{ default: ImageMetadata }>('../../assets/projects/travel/*.{jpg,png,webp}', {
+		eager: true,
+	})
+);
 // 导入 Image 组件和图像
-const images = await Astro.glob('../../assets/projects/travel/*.{jpg,png,webp}');
 ---
 <DetailPostLayout
 	title="Tink Life | 灵感设计 | Rico "

@@ -54,6 +54,12 @@
     font-style: normal;
 }
 
+@import url("https://chinese-fonts-cdn.deno.dev/packages/hwmct/dist/汇文明朝体/result.css");
+.font-huiwen {
+    font-family:'Huiwen-mincho'!important;
+    font-weight:400!important;
+}
+
 /* Global variables */
 :root {
     /* Gradients */

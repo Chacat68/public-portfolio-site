@@ -1,200 +1,215 @@
-<a href="/README.md" style="margin-bottom:16px">中文说明</a>
+# Designer Portfolio Site
 
-# Designer Portfolio Site - Astro.js
+[中文说明](./README.md)
 
-### Site Preview
+An Astro-based portfolio and blog template for designers, makers, independent developers, and personal brand websites.
 
-Rico's Blog:  <a href="https://blog.ricocc.com/" target="_blank">blog.ricocc.com</a>
+- Live site: [ricoui.com](https://ricoui.com/)
+- Repository: [github.com/ricocc/public-portfolio-site](https://github.com/ricocc/public-portfolio-site)
 
-Repository: <a href="https://github.com/ricocc/public-portfolio-site" target="_blank">github.com/ricocc/public-portfolio-site</a>
+<img src="public/preview.jpg" alt="Website preview" width="640" style="display:inline-block;margin:12px 0;">
 
+## Tech Stack
 
-<img src="public/preview01.jpg" alt="Blog Preview" width="640" height="auto" style="display:inline-block;margin:12px;">
+- Astro `6.4.4`
+- `@astrojs/mdx`
+- `@astrojs/sitemap`
+- `@astrojs/rss`
+- Sass
+- TypeScript
+- Sharp for Astro image optimization
+- pnpm
 
----
+## Getting Started
 
-### Tech Stack
-
-- Astro.js 5.7.5
-- Sass 1.79.4
-- TypeScript 5.6.2
-
----
-
-### Font Selection
-
-Chinese Title Font: HuiWen Mincho <a href="https://tieba.baidu.com/p/7193815211" target="_blank">Official Link</a>
-
-Body Font: Noto Sans SC <a href="https://fonts.google.com/noto/specimen/Noto+Sans+SC?query=Noto+sans+sc" target="_blank">Google Font</a>
-
-English Font: Special Elite <a href="https://fonts.google.com/specimen/Special+Elite" target="_blank">Google Font</a>
-
-Due to the large file size of Chinese fonts, I chose to embed titles as SVG format. You can download the fonts yourself and convert them to replace the existing ones.
-
----
-
-### Basic Usage Instructions
-
-#### Website Main Information Data
-The main website information is concentrated in `src/data/`. You can modify these files to customize your website:
-- `content.ts`: Basic website information, including contact details, navigation, TDK, etc.
-- `project.ts`: Project information, mainly displayed in the project list. However, detailed project pages need to be created manually
-- `home.json`: Portfolio list displayed on the homepage, with various optional content information
-
-For the About page, you need to manually add your personal introduction. For blog content, just add markdown files in the `content/blog/*` folder following the fixed format, and the blog list will automatically add titles and paths.
-
-The main website information is stored in `src/data/content.ts`
-Modify the corresponding data as needed
-Some parts need to be modified manually in the pages
-
-#### Environment Variables Configuration
-The `.env` file is used to set environment variables for the application. You can copy the contents from `.env.example` to `.env` and fill in the required values. Note that the `.env` file should not be committed to version control, and Git will automatically ignore it.
-
-In the `.env` file, you can set the following variables:
-
-- `PUBLIC_SITE_URL`: The public URL of the site.
-- `PUBLIC_SITE_NAME`: The name of the site.
-- `PUBLIC_GA4_ID`: (Not required) Google Analytics 4 ID.
-- `PUBLIC_UMAMI_ID`: (Not required) Umami ID.
-
-**Google Analytics 和 Umami 分析**
-- https://analytics.google.com/
-- https://umami.is/
-
-Ensure these variables are correctly set in both local development and production environments for proper application functionality.
-
-
-
-#### Project Showcase on Index Page
-Project data is stored in
-`src/data/home.json`
-
-```typescript
-[
-	{
-		"id": "1",
-		"cover": "/assets/cover/cover-todo.jpg",
-		"title": "Web Todo List",
-		"desc": "An excellent, clean-designed web version of Todolist",
-		"url": "https://todo.uiineed.com/",
-		"detail": "/detail/todo",
-		"category": "web",
-		"tag": "Web",
-		"date": "2023-07-05",
-		"mark": true,
-	},
-]
-
+```bash
+pnpm install
+pnpm dev
 ```
 
-```Typescript
-		"id" // Project ID (optional)
-		"title"  // Project name (required)
-		"cover"  // Project cover image (optional)
-		"desc" // Project description (optional)
-		"url" /// Project URL (optional)
-		"detail" // Project detail page path (optional)
-		"category" // Project category (optional, defaults to "other" if empty)
-		"tag" // Project tag (optional, but recommended)
-		"date" // Project creation date (optional)
-		"mark" // Whether to display recommendation tag (optional, defaults to false)
+Common commands:
+
+| Command | Action |
+| :-- | :-- |
+| `pnpm dev` | Start the local dev server, usually at `localhost:4321` |
+| `pnpm build` | Run `astro check` and build the static site into `dist/` |
+| `pnpm preview` | Preview the production build locally |
+| `pnpm astro check` | Run Astro diagnostics and type checks |
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure values as needed:
+
+```bash
+PUBLIC_SITE_URL=https://example.com/
+PUBLIC_SITE_NAME="Your Site Name"
+PUBLIC_GA4_ID=
+PUBLIC_UMAMI_ID=
 ```
 
-#### Project List
+- `PUBLIC_SITE_URL`: Public site URL, used by sitemap, RSS, and SEO metadata.
+- `PUBLIC_SITE_NAME`: Site name.
+- `PUBLIC_GA4_ID`: Optional Google Analytics 4 ID.
+- `PUBLIC_UMAMI_ID`: Optional Umami website ID.
 
-Projects `/project`
+Leave `PUBLIC_GA4_ID` and `PUBLIC_UMAMI_ID` empty if you do not need analytics.
 
-```typescript
-export interface ProjectItem {
-	id?: number; // Unique identifier
-	title: string // Project name
-	title_en?: string // English project name
-	description?: string  // Project description
-	date?: string        // Publication date
-	detail?: string // Detailed page path
-  url?: string  // Live link
-	tags?: string[] // Tags
-	cover?: string[] // Cover images
+## Content And Data
+
+Main data files live in `src/data/`:
+
+- `src/data/content.ts`: Site metadata, navigation, SEO text, social links, and page copy.
+- `src/data/home.json`: Homepage portfolio cards.
+- `src/data/project.ts`: Project-list data.
+
+Homepage card example:
+
+```json
+{
+  "id": "10",
+  "cover": "/assets/cover/cover-ricoui-starter.jpg",
+  "useVideo": false,
+  "title": "RicoUI Astro 启动模板",
+  "desc": "Ricoui Starter Template",
+  "url": "https://ricoui-saas-zh.netlify.app/",
+  "detail": "https://ricoui-saas-zh.netlify.app/",
+  "category": "web,recommend",
+  "tag": "Web",
+  "date": "2026-06-07",
+  "mark": true,
+  "opensource": false
 }
 ```
 
-#### Project Details
-Specific project content needs new *.astro pages, manually created and stored in src/pages/detail/. The URL should be filled in the detail property in project.json. If not filled, the homepage project won't have a link.
+Field notes:
 
-`src/pages/detail/`
+- `cover`: Cover image path. Homepage covers currently live in `public/assets/cover/`.
+- `useVideo`: Whether to use a video cover.
+- `title`: Project title.
+- `desc`: Project description.
+- `url`: Live URL.
+- `detail`: Detail page path or external detail URL.
+- `category`: Filter categories. Use comma-separated values for multiple categories, such as `web,recommend`.
+- `tag`: Card tag.
+- `date`: Date used for display and sorting.
+- `mark`: Whether to show the recommendation badge.
+- `opensource`: Whether to show open-source related status.
 
+## Blog Content
+
+Blog posts use the Astro 6 Content Layer API.
+
+- Content config: `src/content.config.ts`
+- Blog directory: `src/content/blog/`
+- Supported formats: `*.md` and `*.mdx`
+
+Example frontmatter:
+
+```yaml
 ---
-
-### 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
+title: Article title
+description: Article description
+publishDate: 2026-06-07
+read: 5
+tags:
+  - Astro
+img: /preview-01.jpg
+img_alt: Preview image
+---
 ```
+
+The old `src/content/config.ts` has been migrated to `src/content.config.ts`, and the collection uses the `glob()` loader from `astro/loaders`.
+
+## Project Detail Pages
+
+Project detail pages live in:
+
+```text
+src/pages/detail/
+```
+
+If a portfolio card uses an internal `detail` path, such as `/detail/todo`, create the matching `.astro` page under `src/pages/detail/`. Local image galleries now use `import.meta.glob()` and Astro's `<Image />` component.
+
+## GitHub Stars
+
+The desktop navigation and mobile menu include a GitHub icon with a live star count:
+
+```text
+src/components/GitHubStars.astro
+```
+
+On page load, it requests the GitHub public API:
+
+```text
+https://api.github.com/repos/ricocc/public-portfolio-site
+```
+
+The UI is updated with the repository's real `stargazers_count`. Unauthenticated GitHub API requests are rate-limited; for high-traffic deployments, use a cached server endpoint.
+
+## Fonts
+
+- Chinese body font: Noto Sans SC
+- English fonts: Special Elite / Inter / Inconsolata
+- Some Chinese headings are embedded as SVG to keep the runtime font payload smaller.
+
+## Project Structure
+
+```text
 /
-├── public/
-│   ├── images/
-│   ├── logo.svg
-│   ├── favicon.ico
-│   └── ...
-├── src/
-│   ├── assets/
-│   │   └── *Layout.astro*
-│   ├── components/
-│   │   ├── *
-│   ├── layouts/
-│   │   └── Layout.astro
-│   ├── content/
-│   │   └── *
-│   ├── data/
-│   │   ├── content.ts
-│   │   ├── project.ts
-│   │   └── home.json
-│   ├── effets/
-│   │   └── *.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       ├── index.astro
-│       ├── about.astro
-│       ├── project.astro
-│       ├── blog.astro
-│       └── 404.astro
-├── package.json
+├─ public/
+│  ├─ assets/
+│  │  └─ cover/
+│  ├─ plugins/
+│  └─ favicon.png
+├─ src/
+│  ├─ assets/
+│  ├─ components/
+│  ├─ content/
+│  │  └─ blog/
+│  ├─ data/
+│  ├─ effects/
+│  ├─ layouts/
+│  ├─ pages/
+│  ├─ styles/
+│  └─ content.config.ts
+├─ astro.config.mjs
+├─ package.json
+└─ pnpm-lock.yaml
 ```
 
----
+## Deployment
 
-### 🧞 Commands
+The project builds to a static site:
 
-All commands are run from the root of the project, from a terminal:
+```bash
+pnpm build
+```
 
-Yarn Command:
+The generated output is in `dist/` and can be deployed to Netlify, Vercel, Cloudflare Pages, GitHub Pages, or any static hosting service.
 
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `yarn install`         | Installs dependencies                            |
-| `yarn dev`             | Starts local dev server at `localhost:4321`      |
-| `yarn build`           | Build your production site to `./dist/`          |
-| `yarn preview`         | Preview your build locally, before deploying     |
-| `yarn astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `yarn astro --help`    | Get help using the Astro CLI                     |
+## Changelog
 
----
+- 2026-06-07: Upgraded to Astro 6, migrated to the Content Layer API, and replaced old `Astro.glob()` usage.
+- 2026-06-07: Switched to pnpm and added `sharp` for Astro image optimization.
+- 2026-06-07: Updated homepage portfolio data and cover assets, and removed old `inspoweb` / `cover-travel` entries.
+- 2026-06-07: Added GitHub icon and live star count to desktop and mobile navigation.
 
-### Roadmap
+## About
 
-- **2025/04/28:** Added effects open-source need3d Abstraction series icons, available at [need3d.ru](https://need3d.ru/). The author is [@ilyarygin](https://www.instagram.com/ilyarygin).
+Rico is a web and UI designer focused on visual design and independent product development. More notes are published on [Rico's Blog](https://blog.ricocc.com/). You can also find Rico on [Xiaohongshu](https://www.xiaohongshu.com/user/profile/5f2b6903000000000101f51f) and [X](https://x.com/ricouii).
 
-- **2025/04/28:** Update version to `Astro.js 5.7.5`; Added .env.example file for configuring site information, with optional defaults for Google Analytics 4 and Umami IDs.
+## Other Templates
 
-### Author
+- **SaaS Template**: [https://github.com/ricocc/ricoui-saas-template](https://github.com/ricocc/ricoui-saas-template)
+- **Portfolio Template**: [https://github.com/ricocc/ricoui-portfolio](https://github.com/ricocc/ricoui-portfolio)
+- **Blog Template**: [https://github.com/ricocc/public-portfolio-site](https://github.com/ricocc/public-portfolio-site)
 
-I'm Rico, a Web/UI designer currently focusing on web visual development. <a href="https://blog.ricocc.com/" target="_blank">Rico's Blog</a> - Here you can learn about some of my works or read my articles and notes.  Focus update on Twitter [@ricouii](https://x.com/ricouii).
+## Support
 
+If this template helps you, a small contribution is always appreciated.
 
-#### Other Project
-- 💡 Website Inspiration <a href="https://inspoweb.com/" target="_blank">InspoWeb.com</a>
-- 🎉 UIUX UI/UX Tools & Resources <a href="https://uiuxdeck.com/" target="_blank"> UIUXDECK.com</a>
-- 🎨 Free Gradients <a href="http://gradientshub.com/" target="_blank">GradientsHub</a>
-- ✔️ Todo List <a href="https://github.com/ricocc/uiineed-todo-list/" target="_blank">Github</a>
+<img src="public/ricocc/zanshangma.jpg" alt="ricocc-wechat" width="280" style="display:inline-block;margin:12px 0;">
 
+## License
+
+[MIT](./LICENSE)

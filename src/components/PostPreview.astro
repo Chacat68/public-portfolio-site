@@ -3,10 +3,10 @@ import type { CollectionEntry } from 'astro:content';
 interface Props {
 	post: CollectionEntry<'blog'>;
 }
-const { data, slug } = Astro.props.post;
+const { data, id } = Astro.props.post;
 ---
 
-<a href={`/blog/${slug}`} class="post-item border-bottom">
+<a href={`/blog/${id}`} class="post-item border-bottom">
 	<div class="post-title">
 		<h3>
 			{data.title}
