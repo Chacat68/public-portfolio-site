@@ -205,6 +205,56 @@ pnpm build
 
 构建产物位于 `dist/`，可以部署到 Netlify、Vercel、Cloudflare Pages、GitHub Pages 或其他静态托管平台。
 
+### Cloudflare Pages
+
+本项目为纯静态 Astro 站点，推荐部署到 **Cloudflare Pages**。
+
+#### 方式一：连接 Git 仓库（推荐）
+
+1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
+2. 选择仓库 `Chacat68/public-portfolio-site`
+3. 构建设置：
+
+| 配置项 | 值 |
+|--------|-----|
+| Framework preset | Astro |
+| Build command | `pnpm build` |
+| Build output directory | `dist` |
+| Node.js version | `22`（或使用 `.node-version`） |
+
+4. 在 **Environment variables** 中设置（Production 与 Preview 均需）：
+
+| 变量名 | 说明 |
+|--------|------|
+| `PUBLIC_SITE_URL` | 站点正式 URL，如 `https://your-domain.pages.dev` |
+| `PUBLIC_SITE_NAME` | 站点名称 |
+| `PUBLIC_GA4_ID` | （可选）Google Analytics 4 ID |
+| `PUBLIC_UMAMI_ID` | （可选）Umami 统计 ID |
+
+5. 保存后 Cloudflare 会在每次 push 到 `main` 时自动构建并部署。
+
+#### 方式二：Wrangler CLI 手动部署
+
+```bash
+# 首次使用需登录 Cloudflare
+pnpm exec wrangler login
+
+# 首次创建 Pages 项目（只需一次）
+pnpm exec wrangler pages project create public-portfolio-site
+
+# 配置环境变量后构建并部署
+cp .env.example .env   # 填写 PUBLIC_SITE_URL 等
+pnpm deploy
+```
+
+预览分支部署：
+
+```bash
+pnpm deploy:preview
+```
+
+部署成功后，默认地址为 `https://public-portfolio-site.pages.dev`，可在 Cloudflare Dashboard 中绑定自定义域名。
+
 
 
 ## 关于作者

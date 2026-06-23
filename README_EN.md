@@ -187,6 +187,51 @@ pnpm build
 
 The generated output is in `dist/` and can be deployed to Netlify, Vercel, Cloudflare Pages, GitHub Pages, or any static hosting service.
 
+### Cloudflare Pages
+
+This project is a static Astro site and works well on **Cloudflare Pages**.
+
+#### Option 1: Connect Git (recommended)
+
+1. Open [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
+2. Select the `Chacat68/public-portfolio-site` repository
+3. Build settings:
+
+| Setting | Value |
+|---------|-------|
+| Framework preset | Astro |
+| Build command | `pnpm build` |
+| Build output directory | `dist` |
+| Node.js version | `22` (or use `.node-version`) |
+
+4. Add environment variables for Production and Preview:
+
+| Variable | Description |
+|----------|-------------|
+| `PUBLIC_SITE_URL` | Production URL, e.g. `https://your-domain.pages.dev` |
+| `PUBLIC_SITE_NAME` | Site name |
+| `PUBLIC_GA4_ID` | (optional) Google Analytics 4 ID |
+| `PUBLIC_UMAMI_ID` | (optional) Umami analytics ID |
+
+5. Save. Cloudflare will build and deploy on every push to `main`.
+
+#### Option 2: Deploy with Wrangler CLI
+
+```bash
+pnpm exec wrangler login
+pnpm exec wrangler pages project create public-portfolio-site
+cp .env.example .env
+pnpm deploy
+```
+
+Preview branch deployment:
+
+```bash
+pnpm deploy:preview
+```
+
+After deployment, the default URL is `https://public-portfolio-site.pages.dev`. You can attach a custom domain in the Cloudflare Dashboard.
+
 ## Changelog
 
 - 2026-06-07: Upgraded to Astro 6, migrated to the Content Layer API, and replaced old `Astro.glob()` usage.
