@@ -90,7 +90,7 @@ Markdown 语法：
 Markdown 语法：
 
 ```
-email <example@example.com>  
+email <colinwangq@163.com>  
 [GitHub](http://github.com)  
 自动生成链接  <http://www.github.com/>  
 ```
@@ -100,7 +100,7 @@ email <example@example.com>
 
 效果如下：
 
-Email 链接： <example@example.com>  
+Email 链接： <colinwangq@163.com>  
 [连接标题Github网站](http://github.com)  
 自动生成链接： <http://www.github.com/>  
 
