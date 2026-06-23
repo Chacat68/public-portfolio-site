@@ -189,22 +189,24 @@ The generated output is in `dist/` and can be deployed to Netlify, Vercel, Cloud
 
 ### Cloudflare Pages
 
-This project is a static Astro site and works well on **Cloudflare Pages**.
+This project is a static Astro site and works well on **Cloudflare Workers (static assets)** or **Cloudflare Pages**.
 
 #### Option 1: Connect Git (recommended)
 
-1. Open [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-2. Select the `Chacat68/public-portfolio-site` repository
-3. Build settings:
+1. Open [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → connect the `Chacat68/public-portfolio-site` repository
+2. Build settings:
 
 | Setting | Value |
 |---------|-------|
 | Framework preset | Astro |
-| Build command | `pnpm build` |
+| Build command | `pnpm run build` |
 | Build output directory | `dist` |
+| Deploy command | `npx wrangler deploy` |
 | Node.js version | `22` (or use `.node-version`) |
 
-4. Add environment variables for Production and Preview:
+> **Note:** `wrangler.jsonc` declares `assets.directory: "./dist"`, so Wrangler treats this as a static site and will **not** auto-install the `@astrojs/cloudflare` adapter.
+
+3. Add environment variables for Production and Preview:
 
 | Variable | Description |
 |----------|-------------|
@@ -213,24 +215,17 @@ This project is a static Astro site and works well on **Cloudflare Pages**.
 | `PUBLIC_GA4_ID` | (optional) Google Analytics 4 ID |
 | `PUBLIC_UMAMI_ID` | (optional) Umami analytics ID |
 
-5. Save. Cloudflare will build and deploy on every push to `main`.
+4. Save. Cloudflare will build and deploy on every push to `main`.
 
 #### Option 2: Deploy with Wrangler CLI
 
 ```bash
 pnpm exec wrangler login
-pnpm exec wrangler pages project create public-portfolio-site
 cp .env.example .env
 pnpm deploy
 ```
 
-Preview branch deployment:
-
-```bash
-pnpm deploy:preview
-```
-
-After deployment, the default URL is `https://public-portfolio-site.pages.dev`. You can attach a custom domain in the Cloudflare Dashboard.
+After deployment, bind a custom domain in the Cloudflare Dashboard.
 
 ## Changelog
 

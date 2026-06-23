@@ -1,0 +1,3 @@
+# 防止 Worker 脚本或 Pages 路由文件被当作静态资源上传
+_worker.js
+_routes.json

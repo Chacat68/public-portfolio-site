@@ -207,22 +207,24 @@ pnpm build
 
 ### Cloudflare Pages
 
-本项目为纯静态 Astro 站点，推荐部署到 **Cloudflare Pages**。
+本项目为纯静态 Astro 站点，推荐部署到 **Cloudflare Workers（静态资源模式）** 或 **Cloudflare Pages**。
 
 #### 方式一：连接 Git 仓库（推荐）
 
-1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
-2. 选择仓库 `Chacat68/public-portfolio-site`
-3. 构建设置：
+1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → 连接 Git 仓库 `Chacat68/public-portfolio-site`
+2. 构建设置：
 
 | 配置项 | 值 |
 |--------|-----|
 | Framework preset | Astro |
-| Build command | `pnpm build` |
+| Build command | `pnpm run build` |
 | Build output directory | `dist` |
+| Deploy command | `npx wrangler deploy` |
 | Node.js version | `22`（或使用 `.node-version`） |
 
-4. 在 **Environment variables** 中设置（Production 与 Preview 均需）：
+> **说明：** 仓库内 `wrangler.jsonc` 已声明 `assets.directory: "./dist"`，告知 Wrangler 这是纯静态站点，**不会**自动安装 `@astrojs/cloudflare` adapter。
+
+3. 在 **Environment variables** 中设置（Production 与 Preview 均需）：
 
 | 变量名 | 说明 |
 |--------|------|
@@ -231,7 +233,7 @@ pnpm build
 | `PUBLIC_GA4_ID` | （可选）Google Analytics 4 ID |
 | `PUBLIC_UMAMI_ID` | （可选）Umami 统计 ID |
 
-5. 保存后 Cloudflare 会在每次 push 到 `main` 时自动构建并部署。
+4. 保存后 Cloudflare 会在每次 push 到 `main` 时自动构建并部署。
 
 #### 方式二：Wrangler CLI 手动部署
 
@@ -239,21 +241,12 @@ pnpm build
 # 首次使用需登录 Cloudflare
 pnpm exec wrangler login
 
-# 首次创建 Pages 项目（只需一次）
-pnpm exec wrangler pages project create public-portfolio-site
-
 # 配置环境变量后构建并部署
 cp .env.example .env   # 填写 PUBLIC_SITE_URL 等
 pnpm deploy
 ```
 
-预览分支部署：
-
-```bash
-pnpm deploy:preview
-```
-
-部署成功后，默认地址为 `https://public-portfolio-site.pages.dev`，可在 Cloudflare Dashboard 中绑定自定义域名。
+部署成功后，默认地址为 `https://public-portfolio-site.<account>.workers.dev`，可在 Cloudflare Dashboard 中绑定自定义域名。
 
 
 
