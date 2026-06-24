@@ -130,7 +130,9 @@ PUBLIC_UMAMI_ID=
 }
 ```
 
-首页「视频」筛选项对应 `category` 中包含 `web` 的卡片；带 `video` 字段的卡片点击封面会弹出全屏播放层，按 `Esc` 或点击遮罩关闭。
+首页「视频」筛选项对应 `category` 中包含 `web` 的卡片；带 `video` 字段的卡片点击封面会弹出全屏播放层，按 `Esc` 或点击遮罩关闭。弹层底部提供「在 B 站打开」备用链接。
+
+**控制台报错说明：** 嵌入 B 站播放器时，若浏览器安装了广告拦截插件（uBlock、AdGuard 等），可能出现 `ERR_BLOCKED_BY_CLIENT`、`gaia-gateway`、`bili-user-fingerprint` 等报错——这些来自 B 站 iframe 内部的统计/指纹脚本被拦截，**通常不影响播放**。若站内无法播放，可点击「在 B 站打开」跳转原视频页。
 
 ## 博客内容
 
