@@ -120,6 +120,8 @@ img_alt: Preview image
 
 The old `src/content/config.ts` has been migrated to `src/content.config.ts`, and the collection uses the `glob()` loader from `astro/loaders`.
 
+Inline blog images are capped at `70vh` so tall screenshots do not dominate the page. Click any image to open a fullscreen viewer with mouse-wheel zoom, pinch-to-zoom, drag-to-pan, toolbar controls (+/−/reset), and `Esc` or backdrop click to close. Component: `src/components/BlogImageZoom.astro`.
+
 ## Project Detail Pages
 
 Project detail pages live in:

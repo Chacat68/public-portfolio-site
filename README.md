@@ -159,6 +159,8 @@ img_alt: Preview image
 
 旧版 `src/content/config.ts` 已迁移为根目录下的 `src/content.config.ts`，并使用 `astro/loaders` 里的 `glob()` loader。
 
+博客正文中的图片默认限制最大高度（`70vh`），避免长图占满整屏。点击图片可进入全屏预览，支持滚轮缩放、双指捏合、拖拽平移，以及工具栏上的放大 / 缩小 / 重置按钮；按 `Esc` 或点击遮罩关闭。相关组件：`src/components/BlogImageZoom.astro`。
+
 ## 项目详情页
 
 项目详情页放在：

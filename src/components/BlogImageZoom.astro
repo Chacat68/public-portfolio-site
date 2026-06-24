@@ -1,0 +1,336 @@
+---
+/** 博客正文图片：点击放大，支持滚轮/按钮/双指缩放与拖拽平移 */
+---
+
+<div class="blog-zoom" id="blog-zoom" hidden>
+	<button class="blog-zoom__close" type="button" aria-label="关闭">&times;</button>
+	<div class="blog-zoom__toolbar">
+		<button type="button" class="blog-zoom__btn" data-action="zoom-out" aria-label="缩小">−</button>
+		<span class="blog-zoom__scale" data-scale>100%</span>
+		<button type="button" class="blog-zoom__btn" data-action="zoom-in" aria-label="放大">+</button>
+		<button type="button" class="blog-zoom__btn blog-zoom__btn--reset" data-action="reset" aria-label="重置缩放">↺</button>
+	</div>
+	<p class="blog-zoom__hint">滚轮缩放 · 拖拽平移 · Esc 关闭</p>
+	<div class="blog-zoom__viewport" data-viewport>
+		<img class="blog-zoom__img" data-img src="" alt="" draggable="false" />
+	</div>
+</div>
+
+<script>
+	function initBlogImageZoom() {
+		const zoomEl = document.getElementById('blog-zoom') as HTMLElement | null;
+		if (!zoomEl) return;
+
+		const overlay = zoomEl;
+
+		const viewport = overlay.querySelector('[data-viewport]') as HTMLElement;
+		const img = overlay.querySelector('[data-img]') as HTMLImageElement;
+		const scaleLabel = overlay.querySelector('[data-scale]') as HTMLElement;
+		const closeBtn = overlay.querySelector('.blog-zoom__close') as HTMLButtonElement;
+
+		if (!viewport || !img || !scaleLabel || !closeBtn) return;
+
+		const MIN_SCALE = 0.5;
+		const MAX_SCALE = 5;
+		const SCALE_STEP = 0.2;
+
+		let scale = 1;
+		let translateX = 0;
+		let translateY = 0;
+		let isDragging = false;
+		let dragStartX = 0;
+		let dragStartY = 0;
+		let dragOriginX = 0;
+		let dragOriginY = 0;
+		let pinchStartDistance = 0;
+		let pinchStartScale = 1;
+		let bound = false;
+
+		function applyTransform() {
+			img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+			scaleLabel.textContent = `${Math.round(scale * 100)}%`;
+			viewport.classList.toggle('is-draggable', scale > 1);
+		}
+
+		function resetTransform() {
+			scale = 1;
+			translateX = 0;
+			translateY = 0;
+			applyTransform();
+		}
+
+		function open(src: string, alt: string) {
+			img.src = src;
+			img.alt = alt;
+			resetTransform();
+			overlay.hidden = false;
+			document.body.style.overflow = 'hidden';
+		}
+
+		function close() {
+			overlay.hidden = true;
+			img.removeAttribute('src');
+			document.body.style.overflow = '';
+			resetTransform();
+		}
+
+		function setScale(next: number) {
+			scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, next));
+			applyTransform();
+		}
+
+		function bindContentImages() {
+			document.querySelectorAll('.post.article .content img').forEach((node) => {
+				const el = node as HTMLImageElement;
+				if (el.dataset.zoomBound === 'true') return;
+				el.dataset.zoomBound = 'true';
+				el.classList.add('blog-content-img');
+				el.setAttribute('draggable', 'false');
+				el.addEventListener('click', () => {
+					open(el.currentSrc || el.src, el.alt);
+				});
+			});
+		}
+
+		function onPointerDown(e: PointerEvent) {
+			if (scale <= 1) return;
+			isDragging = true;
+			dragStartX = e.clientX;
+			dragStartY = e.clientY;
+			dragOriginX = translateX;
+			dragOriginY = translateY;
+			viewport.setPointerCapture(e.pointerId);
+		}
+
+		function onPointerMove(e: PointerEvent) {
+			if (!isDragging) return;
+			translateX = dragOriginX + (e.clientX - dragStartX);
+			translateY = dragOriginY + (e.clientY - dragStartY);
+			applyTransform();
+		}
+
+		function onPointerUp(e: PointerEvent) {
+			if (!isDragging) return;
+			isDragging = false;
+			viewport.releasePointerCapture(e.pointerId);
+		}
+
+		function onWheel(e: WheelEvent) {
+			if (overlay.hidden) return;
+			e.preventDefault();
+			const delta = e.deltaY > 0 ? -SCALE_STEP : SCALE_STEP;
+			setScale(scale + delta);
+		}
+
+		function getTouchDistance(touches: TouchList) {
+			const dx = touches[0].clientX - touches[1].clientX;
+			const dy = touches[0].clientY - touches[1].clientY;
+			return Math.hypot(dx, dy);
+		}
+
+		function onTouchStart(e: TouchEvent) {
+			if (e.touches.length !== 2) return;
+			e.preventDefault();
+			pinchStartDistance = getTouchDistance(e.touches);
+			pinchStartScale = scale;
+		}
+
+		function onTouchMove(e: TouchEvent) {
+			if (e.touches.length !== 2 || pinchStartDistance === 0) return;
+			e.preventDefault();
+			const distance = getTouchDistance(e.touches);
+			setScale(pinchStartScale * (distance / pinchStartDistance));
+		}
+
+		function onTouchEnd() {
+			pinchStartDistance = 0;
+		}
+
+		if (!bound) {
+			bound = true;
+
+			closeBtn.addEventListener('click', close);
+
+			overlay.addEventListener('click', (e) => {
+				if (e.target === overlay) close();
+			});
+
+			viewport.addEventListener('click', (e) => e.stopPropagation());
+
+			overlay.querySelectorAll('[data-action]').forEach((btn) => {
+				btn.addEventListener('click', (e) => {
+					e.stopPropagation();
+					const action = (btn as HTMLElement).dataset.action;
+					if (action === 'zoom-in') setScale(scale + SCALE_STEP);
+					if (action === 'zoom-out') setScale(scale - SCALE_STEP);
+					if (action === 'reset') resetTransform();
+				});
+			});
+
+			viewport.addEventListener('pointerdown', onPointerDown);
+			viewport.addEventListener('pointermove', onPointerMove);
+			viewport.addEventListener('pointerup', onPointerUp);
+			viewport.addEventListener('pointercancel', onPointerUp);
+			viewport.addEventListener('wheel', onWheel, { passive: false });
+			viewport.addEventListener('touchstart', onTouchStart, { passive: false });
+			viewport.addEventListener('touchmove', onTouchMove, { passive: false });
+			viewport.addEventListener('touchend', onTouchEnd);
+
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && !overlay.hidden) close();
+			});
+		}
+
+		bindContentImages();
+	}
+
+	document.addEventListener('DOMContentLoaded', initBlogImageZoom);
+</script>
+
+<style is:global>
+	.post.article .content img.blog-content-img {
+		display: block;
+		max-width: 100%;
+		max-height: 70vh;
+		width: auto;
+		height: auto;
+		margin: 1.25rem auto;
+		object-fit: contain;
+		cursor: zoom-in;
+		transition: opacity 0.2s ease;
+	}
+
+	.post.article .content img.blog-content-img:hover {
+		opacity: 0.92;
+	}
+</style>
+
+<style>
+	.blog-zoom {
+		position: fixed;
+		inset: 0;
+		z-index: 10000;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.92);
+	}
+
+	.blog-zoom[hidden] {
+		display: none;
+	}
+
+	.blog-zoom__close {
+		position: absolute;
+		top: 16px;
+		right: 20px;
+		border: none;
+		background: transparent;
+		color: #fff;
+		font-size: 36px;
+		line-height: 1;
+		cursor: pointer;
+		z-index: 2;
+		padding: 4px 8px;
+	}
+
+	.blog-zoom__close:hover {
+		opacity: 0.75;
+	}
+
+	.blog-zoom__toolbar {
+		position: absolute;
+		top: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.12);
+		backdrop-filter: blur(8px);
+		z-index: 2;
+	}
+
+	.blog-zoom__btn {
+		width: 32px;
+		height: 32px;
+		border: none;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.16);
+		color: #fff;
+		font-size: 18px;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.blog-zoom__btn:hover {
+		background: rgba(255, 255, 255, 0.28);
+	}
+
+	.blog-zoom__btn--reset {
+		font-size: 16px;
+	}
+
+	.blog-zoom__scale {
+		min-width: 52px;
+		text-align: center;
+		color: rgba(255, 255, 255, 0.9);
+		font-size: 13px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.blog-zoom__hint {
+		position: absolute;
+		bottom: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+		margin: 0;
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 12px;
+		pointer-events: none;
+		white-space: nowrap;
+	}
+
+	.blog-zoom__viewport {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		touch-action: none;
+		cursor: default;
+	}
+
+	.blog-zoom__viewport.is-draggable {
+		cursor: grab;
+	}
+
+	.blog-zoom__viewport.is-draggable:active {
+		cursor: grabbing;
+	}
+
+	.blog-zoom__img {
+		max-width: min(92vw, 100%);
+		max-height: 82vh;
+		object-fit: contain;
+		transform-origin: center center;
+		transition: transform 0.05s linear;
+		user-select: none;
+		-webkit-user-drag: none;
+	}
+
+	@media (max-width: 576px) {
+		.blog-zoom__hint {
+			display: none;
+		}
+
+		.blog-zoom__toolbar {
+			top: auto;
+			bottom: 16px;
+		}
+	}
+</style>
