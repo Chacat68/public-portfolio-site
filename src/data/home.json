@@ -125,7 +125,27 @@
 		"date": "2026-06-07",
 		"mark": true,
 		"opensource": false
-	}
+	},
+		{
+			"id": "video-1",
+			"cover": "http://i2.hdslb.com/bfs/archive/990af910f239464993d51e7f504784276f15f933.jpg",
+			"title": "23春分",
+			"desc": "",
+			"category": "web",
+			"tag": "视频",
+			"date": "2026-06-24",
+			"video": "https://player.bilibili.com/player.html?bvid=BV19g4y1x7A9"
+		},
+		{
+			"id": "video-2",
+			"cover": "http://i0.hdslb.com/bfs/archive/b207aebe6f882db5e70a7e57437709f84a9f792d.jpg",
+			"title": "23.4.5",
+			"desc": "",
+			"category": "web",
+			"tag": "视频",
+			"date": "2026-06-24",
+			"video": "https://player.bilibili.com/player.html?bvid=BV1dc411p79y"
+		}
 
 
 ]
