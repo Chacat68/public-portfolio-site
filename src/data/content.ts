@@ -1,5 +1,5 @@
 export const siteConfig = {
-    siteName: import.meta.env.PUBLIC_SITE_NAME,
+    siteName: import.meta.env.PUBLIC_SITE_NAME || '见物',
     siteUrl: import.meta.env.PUBLIC_SITE_URL,
 }
 
