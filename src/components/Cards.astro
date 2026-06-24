@@ -19,6 +19,8 @@ for (const [index,item] of cardData.entries()) {
     tag: item.tag || "",
     date: item.date || "",
     mark: item.mark|| "",
+    hiRes: item.hiRes || "",
+    video: item.video || "",
     index: index + 1,
   };
   cards.push(card);
@@ -31,7 +33,7 @@ const count = cards.length;
     <div class="js-shuffle-sizer" >
         <div class="card-list my-shuffle-container" id="js-shuffle">
             {cards.reverse().map((card) => (
-              <div class="card-item col-xs-1a col-md-2a col-lg-3a col-xxl-4a" data-groups={JSON.stringify(card.category)} data-date-created={card.date} data-title={card.title}>
+              <div class="card-item col-xs-1a col-md-2a col-lg-3a col-xxl-4a" data-groups={JSON.stringify(card.category)} data-date-created={card.date} data-title={card.title} data-full-img={card.hiRes || ""} data-video={card.video || ""}>
                   <div class="card-header">
                       <div class="card-type type">
                           <span class="type-tag">- {card.tag} - </span>
@@ -70,6 +72,7 @@ const count = cards.length;
 <div class="lightbox" id="lightbox">
   <span class="lightbox-close">&times;</span>
   <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+  <iframe class="lightbox-video" id="lightbox-video" src="" frameborder="0" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
 </div>
 
 <script>
@@ -253,11 +256,22 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-// Lightbox — 摄影卡片点击放大
+// Lightbox — 摄影卡片点击放大（支持图片 + 视频嵌入）
 (function() {
   var lightbox = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightbox-img');
-  if (!lightbox || !lightboxImg) return;
+  var lightboxVideo = document.getElementById('lightbox-video');
+  if (!lightbox || !lightboxImg || !lightboxVideo) return;
+
+  var currentFullImg = null;
+
+  function close() {
+    lightbox.style.display = 'none';
+    lightboxVideo.src = '';      // 停止视频播放
+    lightboxVideo.style.display = 'none';
+    lightboxImg.style.display = '';
+    currentFullImg = null;
+  }
 
   document.addEventListener('click', function(e) {
     var cardFigure = e.target.closest('.card-figure');
@@ -271,19 +285,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (groups.indexOf('photography') === -1) return;
 
     e.preventDefault();
+
+    // 优先检查视频链接
+    var videoUrl = cardItem.getAttribute('data-video');
+    if (videoUrl) {
+      lightboxImg.style.display = 'none';
+      lightboxVideo.style.display = '';
+      lightboxVideo.src = videoUrl;
+      lightbox.style.display = 'flex';
+      return;
+    }
+
+    // 图片模式
     var img = cardFigure.querySelector('img');
     if (!img) return;
+
+    lightboxImg.style.display = '';
+    lightboxVideo.style.display = 'none';
     lightboxImg.src = img.src;
+    lightboxImg.classList.remove('loaded');
     lightbox.style.display = 'flex';
+
+    var fullImg = cardItem.getAttribute('data-full-img');
+    if (fullImg && fullImg !== img.src) {
+      currentFullImg = fullImg;
+      var hiRes = new Image();
+      hiRes.onload = function() {
+        if (lightbox.style.display === 'flex' && currentFullImg === fullImg) {
+          lightboxImg.src = fullImg;
+          lightboxImg.classList.add('loaded');
+        }
+      };
+      hiRes.onerror = function() {
+        currentFullImg = null;
+      };
+      hiRes.src = fullImg;
+    } else {
+      lightboxImg.classList.add('loaded');
+    }
   });
 
-  lightbox.addEventListener('click', function() {
-    lightbox.style.display = 'none';
-  });
-
+  lightbox.addEventListener('click', close);
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && lightbox.style.display === 'flex') {
-      lightbox.style.display = 'none';
+      close();
     }
   });
 })();
@@ -451,6 +496,20 @@ document.addEventListener('DOMContentLoaded', () => {
   max-width: 90vw;
   max-height: 90vh;
   object-fit: contain;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+}
+.lightbox-img.loaded {
+  opacity: 1;
+}
+.lightbox-video {
+  display: none;
+  width: 80vw;
+  height: 80vh;
+  max-width: 90vw;
+  max-height: 90vh;
+  border: none;
   border-radius: 4px;
 }
 .lightbox-close {
