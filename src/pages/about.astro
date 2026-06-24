@@ -1,10 +1,10 @@
 ---
-import { Image } from 'astro:assets';
 import BlogPostLayout from "../layouts/BlogPostLayout.astro";
 import SectionHeader from "../components/SectionHeader.astro";
 import CallToAction from "../components/CallToAction.astro";
 import {pageTag, pageDescription,aboutTdk} from '../data/content';
-import myPortrait from "../assets/portrait.jpg";
+
+const portraitUrl = 'https://blog-1259751088.cos.ap-shanghai.myqcloud.com/20260624134214913.webp?imageSlim';
 ---
 <BlogPostLayout
 	title={aboutTdk.title || ''}
@@ -22,7 +22,7 @@ import myPortrait from "../assets/portrait.jpg";
 			<section class="border-top" style="padding-top: 2rem;">
 				<div class="content">
 					<div style="text-align:center">
-						<Image src={myPortrait} alt="portrait" width="88" height="88" class="portrait">
+						<img src={portraitUrl} alt="portrait" width="88" height="88" class="portrait" />
 					</div>
 					<p>
 						我是 <strong style="font-size:1.2em">王权</strong>，一名摄影师，专注于用镜头捕捉光影、记录瞬间。从街头纪实到人像创作，我始终在寻找画面中那个恰到好处的时刻。
