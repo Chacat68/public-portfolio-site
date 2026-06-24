@@ -101,7 +101,7 @@ PUBLIC_UMAMI_ID=
 
 字段说明：
 
-- `cover`：封面图路径，当前首页封面放在 `public/assets/cover/`。
+- `cover`：封面图路径，当前首页封面放在 `public/assets/cover/`。也可填写外部图片 URL；若外链有防盗链（如 B 站封面），页面已自动设置 `referrerpolicy="no-referrer"`，更稳妥的做法是下载到本地后引用。
 - `useVideo`：是否使用视频封面。
 - `title`：项目名称。
 - `desc`：项目描述。
@@ -112,6 +112,25 @@ PUBLIC_UMAMI_ID=
 - `date`：日期，用于展示和排序。
 - `mark`：是否显示推荐标记。
 - `opensource`：是否显示开源相关状态。
+- `hiRes`：摄影类作品的高清大图地址，点击封面后在弹层中加载。
+- `video`：视频嵌入地址（如 B 站播放器链接），点击封面后在弹层中播放；填写后封面会显示播放按钮。
+
+视频卡片示例：
+
+```json
+{
+  "id": "video-1",
+  "cover": "https://example.com/cover.jpg",
+  "title": "作品标题",
+  "desc": "",
+  "category": "web",
+  "tag": "视频",
+  "date": "2026-06-24",
+  "video": "https://player.bilibili.com/player.html?bvid=BVxxxxxxxx"
+}
+```
+
+首页「视频」筛选项对应 `category` 中包含 `web` 的卡片；带 `video` 字段的卡片点击封面会弹出全屏播放层，按 `Esc` 或点击遮罩关闭。
 
 ## 博客内容
 
