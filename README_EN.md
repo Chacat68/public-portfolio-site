@@ -132,11 +132,7 @@ If a portfolio card uses an internal `detail` path, such as `/detail/todo`, crea
 
 ## GitHub Stars
 
-The desktop navigation and mobile menu include a GitHub icon with a live star count:
-
-```text
-src/components/GitHubStars.astro
-```
+The GitHub star badge is hidden from the navigation by default. The component remains at `src/components/GitHubStars.astro`; re-import it in `Nav.astro` and `NavMobile.astro` to show it again.
 
 On page load, it requests the GitHub public API:
 

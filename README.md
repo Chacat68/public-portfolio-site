@@ -169,11 +169,7 @@ src/pages/detail/
 
 ## GitHub Stars
 
-右上角导航和移动端菜单已经加入 GitHub 图标与 star 数量组件：
-
-```text
-src/components/GitHubStars.astro
-```
+导航栏中的 GitHub star 徽章已默认隐藏。组件仍保留在 `src/components/GitHubStars.astro`，如需恢复，在 `Nav.astro` 与 `NavMobile.astro` 中重新引入即可。
 
 页面加载后会请求 GitHub 公共 API：
 
