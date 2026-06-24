@@ -124,6 +124,6 @@ export interface FilterItem {
 export const filterItems: FilterItem[] = [
 	{ content: "推荐", dataGroup: "recommend" },
 	{ content: "摄影", dataGroup: "photography" },
-	{ content: "人像", dataGroup: "web" },
-	{ content: "风光", dataGroup: "brand" },
+	{ content: "网页", dataGroup: "web" },
+	{ content: "品牌", dataGroup: "brand" },
 ];
