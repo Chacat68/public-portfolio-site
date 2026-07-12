@@ -58,7 +58,7 @@ Leave `PUBLIC_GA4_ID` and `PUBLIC_UMAMI_ID` empty if you do not need analytics.
 
 Main data files live in `src/data/`:
 
-- `src/data/content.ts`: Site metadata, navigation, SEO text, social links, and page copy.
+- `src/data/content.ts`: Site metadata, navigation, SEO text, social links, and page copy. Configure social icons in `socialLinks` (currently Bilibili space + RSS).
 - `src/data/home.json`: Homepage portfolio cards.
 - `src/data/project.ts`: Project-list data.
 

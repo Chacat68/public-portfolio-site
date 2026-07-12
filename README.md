@@ -76,7 +76,7 @@ PUBLIC_UMAMI_ID=
 
 主要内容配置集中在 `src/data/`：
 
-- `src/data/content.ts`：站点基础信息、导航、SEO 文案、社交链接、页头文案等。
+- `src/data/content.ts`：站点基础信息、导航、SEO 文案、社交链接、页头文案等。社交链接在 `socialLinks` 中配置（当前含 B 站主页与 RSS）。
 - `src/data/home.json`：首页作品卡片数据。
 - `src/data/project.ts`：项目列表页数据。
 
