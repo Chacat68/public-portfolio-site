@@ -66,18 +66,14 @@ Homepage card example:
 
 ```json
 {
-  "id": "10",
-  "cover": "/assets/cover/cover-ricoui-starter.jpg",
-  "useVideo": false,
-  "title": "RicoUI Astro 启动模板",
-  "desc": "Ricoui Starter Template",
-  "url": "https://ricoui-saas-zh.netlify.app/",
-  "detail": "https://ricoui-saas-zh.netlify.app/",
-  "category": "web,recommend",
-  "tag": "Web",
-  "date": "2026-06-07",
-  "mark": true,
-  "opensource": false
+  "id": "1",
+  "cover": "https://example.com/cover.jpg",
+  "title": "Kitchen",
+  "desc": "Interior case — kitchen",
+  "category": "photography,recommend",
+  "tag": "Photo",
+  "date": "2024-07-05",
+  "mark": true
 }
 ```
 
@@ -89,7 +85,7 @@ Field notes:
 - `desc`: Project description.
 - `url`: Live URL.
 - `detail`: Detail page path or external detail URL.
-- `category`: Filter categories. Use comma-separated values for multiple categories, such as `web,recommend`.
+- `category`: Filter categories. Use comma-separated values for multiple categories, such as `photography,recommend`. Homepage filters: `recommend`, `photography`, `video`.
 - `tag`: Card tag.
 - `date`: Date used for display and sorting.
 - `mark`: Whether to show the recommendation badge.
@@ -118,7 +114,7 @@ Photography gallery example:
 }
 ```
 
-To show photography or video works under the homepage "Recommended" filter, append `recommend` to `category` and set `mark: true` for the badge.
+To show photography or video works under the homepage "Recommended" filter, append `recommend` to `category` and set `mark: true` for the badge. The "Video" filter matches cards whose `category` includes `video`.
 ## Blog Content
 
 Blog posts use the Astro 6 Content Layer API.

@@ -84,18 +84,14 @@ PUBLIC_UMAMI_ID=
 
 ```json
 {
-  "id": "10",
-  "cover": "/assets/cover/cover-ricoui-starter.jpg",
-  "useVideo": false,
-  "title": "RicoUI Astro 启动模板",
-  "desc": "Ricoui Starter Template",
-  "url": "https://ricoui-saas-zh.netlify.app/",
-  "detail": "https://ricoui-saas-zh.netlify.app/",
-  "category": "web,recommend",
-  "tag": "Web",
-  "date": "2026-06-07",
-  "mark": true,
-  "opensource": false
+  "id": "1",
+  "cover": "https://example.com/cover.jpg",
+  "title": "厨房",
+  "desc": "家装案例 — 厨房空间",
+  "category": "photography,recommend",
+  "tag": "摄影",
+  "date": "2024-07-05",
+  "mark": true
 }
 ```
 
@@ -107,7 +103,7 @@ PUBLIC_UMAMI_ID=
 - `desc`：项目描述。
 - `url`：项目线上地址。
 - `detail`：项目详情页路径，也可以填写外部链接。
-- `category`：筛选分类，多个分类用英文逗号分隔，例如 `web,recommend`。
+- `category`：筛选分类，多个分类用英文逗号分隔，例如 `photography,recommend`。首页筛选项对应：`recommend`（推荐）、`photography`（摄影）、`video`（视频）。
 - `tag`：卡片标签。
 - `date`：日期，用于展示和排序。
 - `mark`：是否显示推荐标记。
@@ -144,7 +140,7 @@ PUBLIC_UMAMI_ID=
   "cover": "https://example.com/cover.jpg",
   "title": "作品标题",
   "desc": "",
-  "category": "web,recommend",
+  "category": "video,recommend",
   "tag": "视频",
   "date": "2026-06-24",
   "mark": true,
@@ -152,7 +148,7 @@ PUBLIC_UMAMI_ID=
 }
 ```
 
-摄影、视频作品若需出现在首页「推荐」筛选中，在 `category` 中追加 `recommend`，并设置 `mark: true` 显示推荐标记。首页「视频」筛选项对应 `category` 中包含 `web` 的卡片；带 `video` 字段的卡片点击封面会弹出全屏播放层，按 `Esc` 或点击遮罩关闭。弹层底部提供「在 B 站打开」备用链接。
+摄影、视频作品若需出现在首页「推荐」筛选中，在 `category` 中追加 `recommend`，并设置 `mark: true` 显示推荐标记。首页「视频」筛选项对应 `category` 中包含 `video` 的卡片；带 `video` 字段的卡片点击封面会弹出全屏播放层，按 `Esc` 或点击遮罩关闭。弹层底部提供「在 B 站打开」备用链接。
 
 **控制台报错说明：** 嵌入 B 站播放器时，若浏览器安装了广告拦截插件（uBlock、AdGuard 等），可能出现 `ERR_BLOCKED_BY_CLIENT`、`gaia-gateway`、`bili-user-fingerprint` 等报错——这些来自 B 站 iframe 内部的统计/指纹脚本被拦截，**通常不影响播放**。若站内无法播放，可点击「在 B 站打开」跳转原视频页。
 
