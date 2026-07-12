@@ -113,7 +113,27 @@ PUBLIC_UMAMI_ID=
 - `mark`：是否显示推荐标记。
 - `opensource`：是否显示开源相关状态。
 - `hiRes`：摄影类作品的高清大图地址，点击封面后在弹层中加载。
+- `images`：摄影类作品的组图地址数组；填写后点击封面会弹出展示框，多于一张时自动显示左右切换（也可用键盘 `←` / `→`）。未填写或只有一张时，弹层显示放大 / 缩小按钮，适合长图浏览。
 - `video`：视频嵌入地址（如 B 站播放器链接），点击封面后在弹层中播放；填写后封面会显示播放按钮。
+
+摄影组图示例：
+
+```json
+{
+  "id": "photo-1",
+  "cover": "https://example.com/cover.jpg",
+  "title": "厨房",
+  "desc": "家装案例",
+  "category": "photography",
+  "tag": "摄影",
+  "date": "2026-06-24",
+  "images": [
+    "https://example.com/01.jpg",
+    "https://example.com/02.jpg",
+    "https://example.com/03.jpg"
+  ]
+}
+```
 
 视频卡片示例：
 
@@ -160,6 +180,34 @@ img_alt: Preview image
 旧版 `src/content/config.ts` 已迁移为根目录下的 `src/content.config.ts`，并使用 `astro/loaders` 里的 `glob()` loader。
 
 博客正文中的图片默认限制最大高度（`70vh`），避免长图占满整屏。点击图片可进入全屏预览，支持滚轮缩放、双指捏合、拖拽平移，以及工具栏上的放大 / 缩小 / 重置按钮；按 `Esc` 或点击遮罩关闭。相关组件：`src/components/BlogImageZoom.astro`。
+
+若需要「图片展示框」组图，可用 `BlogImageGallery`（MDX）或手写带 `data-gallery` 的容器。框内图片点击后弹出预览：
+
+- **单图**：显示放大 / 缩小按钮（适合长图）
+- **多图**：显示左右切换与计数（也可用键盘 `←` / `→`）
+
+```mdx
+import BlogImageGallery from '../../../components/BlogImageGallery.astro'
+
+<BlogImageGallery
+  caption="案例对比"
+  images={[
+    { src: 'https://example.com/a.jpg', alt: '图 A' },
+    { src: 'https://example.com/b.jpg', alt: '图 B' },
+  ]}
+/>
+```
+
+Markdown 写法：
+
+```html
+<div class="blog-gallery" data-gallery>
+  <img src="https://example.com/a.jpg" alt="图 A" />
+  <img src="https://example.com/b.jpg" alt="图 B" />
+</div>
+```
+
+组件文件：`src/components/BlogImageGallery.astro`。
 
 ## 项目详情页
 

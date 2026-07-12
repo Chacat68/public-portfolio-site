@@ -1,16 +1,19 @@
 ---
-/** 博客正文图片：点击放大，支持滚轮/按钮/双指缩放与拖拽平移 */
+/** 博客正文图片：点击放大；组图自动左右切换；支持滚轮/按钮/双指缩放与拖拽平移 */
 ---
 
 <div class="blog-zoom" id="blog-zoom" hidden>
-	<button class="blog-zoom__close" type="button" aria-label="关闭">&times;</button>
-	<div class="blog-zoom__toolbar">
+	<div class="blog-zoom__controls">
+		<button class="blog-zoom__close" type="button" aria-label="关闭">&times;</button>
+		<button type="button" class="blog-zoom__btn" data-action="zoom-in" aria-label="放大">+</button>
 		<button type="button" class="blog-zoom__btn" data-action="zoom-out" aria-label="缩小">−</button>
 		<span class="blog-zoom__scale" data-scale>100%</span>
-		<button type="button" class="blog-zoom__btn" data-action="zoom-in" aria-label="放大">+</button>
 		<button type="button" class="blog-zoom__btn blog-zoom__btn--reset" data-action="reset" aria-label="重置缩放">↺</button>
 	</div>
-	<p class="blog-zoom__hint">滚轮缩放 · 拖拽平移 · Esc 关闭</p>
+	<button type="button" class="blog-zoom__nav blog-zoom__nav--prev" data-nav="prev" aria-label="上一张" hidden>‹</button>
+	<button type="button" class="blog-zoom__nav blog-zoom__nav--next" data-nav="next" aria-label="下一张" hidden>›</button>
+	<span class="blog-zoom__counter" data-counter hidden></span>
+	<p class="blog-zoom__hint" data-hint>滚轮缩放 · 拖拽平移 · Esc 关闭</p>
 	<div class="blog-zoom__viewport" data-viewport>
 		<img class="blog-zoom__img" data-img src="" alt="" draggable="false" />
 	</div>
@@ -27,12 +30,18 @@
 		const img = overlay.querySelector('[data-img]') as HTMLImageElement;
 		const scaleLabel = overlay.querySelector('[data-scale]') as HTMLElement;
 		const closeBtn = overlay.querySelector('.blog-zoom__close') as HTMLButtonElement;
+		const prevBtn = overlay.querySelector('[data-nav="prev"]') as HTMLButtonElement;
+		const nextBtn = overlay.querySelector('[data-nav="next"]') as HTMLButtonElement;
+		const counterEl = overlay.querySelector('[data-counter]') as HTMLElement;
+		const hintEl = overlay.querySelector('[data-hint]') as HTMLElement;
 
-		if (!viewport || !img || !scaleLabel || !closeBtn) return;
+		if (!viewport || !img || !scaleLabel || !closeBtn || !prevBtn || !nextBtn || !counterEl || !hintEl) return;
 
 		const MIN_SCALE = 0.5;
 		const MAX_SCALE = 5;
 		const SCALE_STEP = 0.2;
+
+		type GalleryItem = { src: string; alt: string };
 
 		let scale = 1;
 		let translateX = 0;
@@ -45,6 +54,8 @@
 		let pinchStartDistance = 0;
 		let pinchStartScale = 1;
 		let bound = false;
+		let gallery: GalleryItem[] = [];
+		let galleryIndex = 0;
 
 		function applyTransform() {
 			img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
@@ -59,10 +70,37 @@
 			applyTransform();
 		}
 
-		function open(src: string, alt: string) {
-			img.src = src;
-			img.alt = alt;
+		function updateChrome() {
+			const multi = gallery.length > 1;
+			// 左右切换只在多图时出现；单图显示缩放按钮
+			prevBtn.hidden = !multi;
+			nextBtn.hidden = !multi;
+			counterEl.hidden = !multi;
+			overlay.querySelectorAll('[data-action], [data-scale]').forEach((node) => {
+				(node as HTMLElement).hidden = multi;
+			});
+			if (multi) {
+				counterEl.textContent = `${galleryIndex + 1} / ${gallery.length}`;
+				hintEl.textContent = '← → 切换 · Esc 关闭';
+			} else {
+				counterEl.textContent = '';
+				hintEl.textContent = '滚轮缩放 · 拖拽平移 · Esc 关闭';
+			}
+		}
+
+		function showCurrent() {
+			const item = gallery[galleryIndex];
+			if (!item) return;
+			img.src = item.src;
+			img.alt = item.alt;
 			resetTransform();
+			updateChrome();
+		}
+
+		function openGallery(items: GalleryItem[], startIndex: number) {
+			gallery = items;
+			galleryIndex = Math.max(0, Math.min(startIndex, items.length - 1));
+			showCurrent();
 			overlay.hidden = false;
 			document.body.style.overflow = 'hidden';
 		}
@@ -71,12 +109,40 @@
 			overlay.hidden = true;
 			img.removeAttribute('src');
 			document.body.style.overflow = '';
+			gallery = [];
+			galleryIndex = 0;
+			updateChrome();
 			resetTransform();
+		}
+
+		function go(delta: number) {
+			if (gallery.length <= 1) return;
+			galleryIndex = (galleryIndex + delta + gallery.length) % gallery.length;
+			showCurrent();
 		}
 
 		function setScale(next: number) {
 			scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, next));
 			applyTransform();
+		}
+
+		function collectGallery(el: HTMLImageElement): { items: GalleryItem[]; index: number } {
+			// 展示框内（data-gallery）视为一组，自动左右切换；否则按单图预览
+			const group = el.closest('[data-gallery]') as HTMLElement | null;
+			const nodes = group
+				? Array.from(group.querySelectorAll('img'))
+				: [el];
+
+			const items = nodes.map((node) => {
+				const image = node as HTMLImageElement;
+				return {
+					src: image.currentSrc || image.src,
+					alt: image.alt || '',
+				};
+			});
+
+			const index = nodes.indexOf(el);
+			return { items, index: index >= 0 ? index : 0 };
 		}
 
 		function bindContentImages() {
@@ -87,13 +153,14 @@
 				el.classList.add('blog-content-img');
 				el.setAttribute('draggable', 'false');
 				el.addEventListener('click', () => {
-					open(el.currentSrc || el.src, el.alt);
+					const { items, index } = collectGallery(el);
+					openGallery(items, index);
 				});
 			});
 		}
 
 		function onPointerDown(e: PointerEvent) {
-			if (scale <= 1) return;
+			if (gallery.length > 1 || scale <= 1) return;
 			isDragging = true;
 			dragStartX = e.clientX;
 			dragStartY = e.clientY;
@@ -116,7 +183,7 @@
 		}
 
 		function onWheel(e: WheelEvent) {
-			if (overlay.hidden) return;
+			if (overlay.hidden || gallery.length > 1) return;
 			e.preventDefault();
 			const delta = e.deltaY > 0 ? -SCALE_STEP : SCALE_STEP;
 			setScale(scale + delta);
@@ -129,14 +196,14 @@
 		}
 
 		function onTouchStart(e: TouchEvent) {
-			if (e.touches.length !== 2) return;
+			if (gallery.length > 1 || e.touches.length !== 2) return;
 			e.preventDefault();
 			pinchStartDistance = getTouchDistance(e.touches);
 			pinchStartScale = scale;
 		}
 
 		function onTouchMove(e: TouchEvent) {
-			if (e.touches.length !== 2 || pinchStartDistance === 0) return;
+			if (gallery.length > 1 || e.touches.length !== 2 || pinchStartDistance === 0) return;
 			e.preventDefault();
 			const distance = getTouchDistance(e.touches);
 			setScale(pinchStartScale * (distance / pinchStartDistance));
@@ -157,9 +224,20 @@
 
 			viewport.addEventListener('click', (e) => e.stopPropagation());
 
+			prevBtn.addEventListener('click', (e) => {
+				e.stopPropagation();
+				go(-1);
+			});
+
+			nextBtn.addEventListener('click', (e) => {
+				e.stopPropagation();
+				go(1);
+			});
+
 			overlay.querySelectorAll('[data-action]').forEach((btn) => {
 				btn.addEventListener('click', (e) => {
 					e.stopPropagation();
+					if (gallery.length > 1) return;
 					const action = (btn as HTMLElement).dataset.action;
 					if (action === 'zoom-in') setScale(scale + SCALE_STEP);
 					if (action === 'zoom-out') setScale(scale - SCALE_STEP);
@@ -177,7 +255,19 @@
 			viewport.addEventListener('touchend', onTouchEnd);
 
 			document.addEventListener('keydown', (e) => {
-				if (e.key === 'Escape' && !overlay.hidden) close();
+				if (overlay.hidden) return;
+				if (e.key === 'Escape') {
+					close();
+					return;
+				}
+				if (e.key === 'ArrowLeft') {
+					e.preventDefault();
+					go(-1);
+				}
+				if (e.key === 'ArrowRight') {
+					e.preventDefault();
+					go(1);
+				}
 			});
 		}
 
@@ -203,6 +293,39 @@
 	.post.article .content img.blog-content-img:hover {
 		opacity: 0.92;
 	}
+
+	/* 文章内图片展示框：组图网格 */
+	.post.article .content .blog-gallery {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+		gap: 12px;
+		margin: 1.5rem 0;
+		padding: 12px;
+		border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
+		border-radius: 12px;
+		background: var(--color-999, rgba(0, 0, 0, 0.03));
+	}
+
+	.post.article .content .blog-gallery img.blog-content-img {
+		width: 100%;
+		max-width: none;
+		max-height: 220px;
+		margin: 0;
+		border-radius: 8px;
+		object-fit: cover;
+	}
+
+	@media (max-width: 576px) {
+		.post.article .content .blog-gallery {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 8px;
+			padding: 8px;
+		}
+
+		.post.article .content .blog-gallery img.blog-content-img {
+			max-height: 140px;
+		}
+	}
 </style>
 
 <style>
@@ -221,37 +344,38 @@
 		display: none;
 	}
 
-	.blog-zoom__close {
+	.blog-zoom__controls {
 		position: absolute;
 		top: 16px;
-		right: 20px;
+		right: 16px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		padding: 8px;
+		border-radius: 12px;
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(8px);
+		z-index: 2;
+	}
+
+	.blog-zoom__close {
 		border: none;
 		background: transparent;
 		color: #fff;
-		font-size: 36px;
+		font-size: 32px;
 		line-height: 1;
 		cursor: pointer;
-		z-index: 2;
-		padding: 4px 8px;
+		padding: 0 4px;
+		width: 36px;
+		height: 36px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.blog-zoom__close:hover {
 		opacity: 0.75;
-	}
-
-	.blog-zoom__toolbar {
-		position: absolute;
-		top: 20px;
-		left: 50%;
-		transform: translateX(-50%);
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 10px;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.12);
-		backdrop-filter: blur(8px);
-		z-index: 2;
 	}
 
 	.blog-zoom__btn {
@@ -275,11 +399,68 @@
 	}
 
 	.blog-zoom__scale {
-		min-width: 52px;
+		min-width: 36px;
 		text-align: center;
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 12px;
+		font-variant-numeric: tabular-nums;
+		line-height: 1;
+		padding: 2px 0;
+	}
+
+	.blog-zoom__nav {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 2;
+		width: 48px;
+		height: 48px;
+		border: none;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.14);
+		color: #fff;
+		font-size: 36px;
+		line-height: 1;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		backdrop-filter: blur(8px);
+	}
+
+	.blog-zoom__nav[hidden],
+	.blog-zoom__counter[hidden],
+	.blog-zoom__btn[hidden],
+	.blog-zoom__scale[hidden] {
+		display: none !important;
+	}
+
+	.blog-zoom__nav:hover {
+		background: rgba(255, 255, 255, 0.28);
+	}
+
+	.blog-zoom__nav--prev {
+		left: 16px;
+	}
+
+	.blog-zoom__nav--next {
+		right: 16px;
+	}
+
+	.blog-zoom__counter {
+		position: absolute;
+		top: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 2;
+		padding: 6px 12px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.12);
 		color: rgba(255, 255, 255, 0.9);
 		font-size: 13px;
 		font-variant-numeric: tabular-nums;
+		backdrop-filter: blur(8px);
+		pointer-events: none;
 	}
 
 	.blog-zoom__hint {
@@ -328,9 +509,18 @@
 			display: none;
 		}
 
-		.blog-zoom__toolbar {
-			top: auto;
-			bottom: 16px;
+		.blog-zoom__nav {
+			width: 40px;
+			height: 40px;
+			font-size: 28px;
+		}
+
+		.blog-zoom__nav--prev {
+			left: 8px;
+		}
+
+		.blog-zoom__nav--next {
+			right: 8px;
 		}
 	}
 </style>

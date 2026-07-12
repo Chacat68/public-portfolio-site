@@ -94,6 +94,28 @@ Field notes:
 - `date`: Date used for display and sorting.
 - `mark`: Whether to show the recommendation badge.
 - `opensource`: Whether to show open-source related status.
+- `hiRes`: High-resolution image for photography cards; loaded in the lightbox when the cover is clicked.
+- `images`: Optional gallery URL array for photography cards. Multiple images show previous/next controls (keyboard `←` / `→`). A single image shows zoom in/out controls instead, which is useful for tall photos.
+- `video`: Embed URL (e.g. Bilibili player). Clicking the cover opens a fullscreen player; a play badge appears on the cover.
+
+Photography gallery example:
+
+```json
+{
+  "id": "photo-1",
+  "cover": "https://example.com/cover.jpg",
+  "title": "Kitchen",
+  "desc": "Interior case",
+  "category": "photography",
+  "tag": "Photo",
+  "date": "2026-06-24",
+  "images": [
+    "https://example.com/01.jpg",
+    "https://example.com/02.jpg",
+    "https://example.com/03.jpg"
+  ]
+}
+```
 
 ## Blog Content
 
@@ -121,6 +143,31 @@ img_alt: Preview image
 The old `src/content/config.ts` has been migrated to `src/content.config.ts`, and the collection uses the `glob()` loader from `astro/loaders`.
 
 Inline blog images are capped at `70vh` so tall screenshots do not dominate the page. Click any image to open a fullscreen viewer with mouse-wheel zoom, pinch-to-zoom, drag-to-pan, toolbar controls (+/−/reset), and `Esc` or backdrop click to close. Component: `src/components/BlogImageZoom.astro`.
+
+For grouped image showcases, use `BlogImageGallery` (MDX) or a container with `data-gallery`. Images inside the frame open the viewer together; when there is more than one image, previous/next controls appear automatically (keyboard `←` / `→` also work):
+
+```mdx
+import BlogImageGallery from '../../../components/BlogImageGallery.astro'
+
+<BlogImageGallery
+  caption="Case comparison"
+  images={[
+    { src: 'https://example.com/a.jpg', alt: 'Image A' },
+    { src: 'https://example.com/b.jpg', alt: 'Image B' },
+  ]}
+/>
+```
+
+Markdown:
+
+```html
+<div class="blog-gallery" data-gallery>
+  <img src="https://example.com/a.jpg" alt="Image A" />
+  <img src="https://example.com/b.jpg" alt="Image B" />
+</div>
+```
+
+Component: `src/components/BlogImageGallery.astro`.
 
 ## Project Detail Pages
 

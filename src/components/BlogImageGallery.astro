@@ -1,0 +1,57 @@
+---
+/**
+ * 博客文章图片展示框
+ * - 网格展示一组图片
+ * - 点击后由 BlogImageZoom 弹出预览
+ * - 组内自动启用左右切换
+ *
+ * MDX 用法：
+ * import BlogImageGallery from '../../../components/BlogImageGallery.astro'
+ * <BlogImageGallery images={[
+ *   { src: 'https://example.com/a.jpg', alt: '图 A' },
+ *   { src: 'https://example.com/b.jpg', alt: '图 B' },
+ * ]} />
+ *
+ * Markdown 也可手写：
+ * <div class="blog-gallery" data-gallery>
+ *   <img src="..." alt="..." />
+ *   <img src="..." alt="..." />
+ * </div>
+ */
+interface GalleryImage {
+	src: string;
+	alt?: string;
+}
+
+interface Props {
+	images: GalleryImage[];
+	/** 可选标题，显示在展示框上方 */
+	caption?: string;
+}
+
+const { images, caption } = Astro.props;
+---
+
+{images.length > 0 && (
+	<figure class="blog-gallery-wrap">
+		{caption && <figcaption class="blog-gallery-wrap__caption">{caption}</figcaption>}
+		<div class="blog-gallery" data-gallery>
+			{images.map((image) => (
+				<img src={image.src} alt={image.alt || ''} loading="lazy" referrerpolicy="no-referrer" />
+			))}
+		</div>
+	</figure>
+)}
+
+<style>
+	.blog-gallery-wrap {
+		margin: 1.5rem 0;
+	}
+
+	.blog-gallery-wrap__caption {
+		margin: 0 0 0.5rem;
+		font-size: 0.875rem;
+		color: var(--color-400, #888);
+		text-align: center;
+	}
+</style>
