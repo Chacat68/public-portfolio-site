@@ -106,9 +106,10 @@ Photography gallery example:
   "cover": "https://example.com/cover.jpg",
   "title": "Kitchen",
   "desc": "Interior case",
-  "category": "photography",
+  "category": "photography,recommend",
   "tag": "Photo",
   "date": "2026-06-24",
+  "mark": true,
   "images": [
     "https://example.com/01.jpg",
     "https://example.com/02.jpg",
@@ -117,6 +118,7 @@ Photography gallery example:
 }
 ```
 
+To show photography or video works under the homepage "Recommended" filter, append `recommend` to `category` and set `mark: true` for the badge.
 ## Blog Content
 
 Blog posts use the Astro 6 Content Layer API.

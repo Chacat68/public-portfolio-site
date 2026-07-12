@@ -6,9 +6,10 @@
 		"cover": "https://blog-1259751088.cos.ap-shanghai.myqcloud.com/20260624134252329.webp?imageSlim",
 		"title": "厨房",
 		"desc": "家装案例 — 厨房空间",
-		"category": "photography",
+		"category": "photography,recommend",
 		"tag": "摄影",
 		"date": "2024-07-05",
+		"mark": true,
 		"hiRes": "",
 		"video": ""
 	},
@@ -131,9 +132,10 @@
 			"cover": "https://i2.hdslb.com/bfs/archive/990af910f239464993d51e7f504784276f15f933.jpg",
 			"title": "春分",
 			"desc": "2023 春分 — 昼夜均而寒暑平",
-			"category": "web",
+			"category": "web,recommend",
 			"tag": "视频",
 			"date": "2026-06-24",
+			"mark": true,
 			"video": "https://player.bilibili.com/player.html?bvid=BV19g4y1x7A9"
 		},
 		{
@@ -141,9 +143,10 @@
 			"cover": "https://i0.hdslb.com/bfs/archive/b207aebe6f882db5e70a7e57437709f84a9f792d.jpg",
 			"title": "清明",
 			"desc": "2023 清明 — 万物生长此时，皆清洁而明净",
-			"category": "web",
+			"category": "web,recommend",
 			"tag": "视频",
 			"date": "2026-06-24",
+			"mark": true,
 			"video": "https://player.bilibili.com/player.html?bvid=BV1dc411p79y"
 		}
 

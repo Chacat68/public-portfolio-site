@@ -124,9 +124,10 @@ PUBLIC_UMAMI_ID=
   "cover": "https://example.com/cover.jpg",
   "title": "厨房",
   "desc": "家装案例",
-  "category": "photography",
+  "category": "photography,recommend",
   "tag": "摄影",
   "date": "2026-06-24",
+  "mark": true,
   "images": [
     "https://example.com/01.jpg",
     "https://example.com/02.jpg",
@@ -143,14 +144,15 @@ PUBLIC_UMAMI_ID=
   "cover": "https://example.com/cover.jpg",
   "title": "作品标题",
   "desc": "",
-  "category": "web",
+  "category": "web,recommend",
   "tag": "视频",
   "date": "2026-06-24",
+  "mark": true,
   "video": "https://player.bilibili.com/player.html?bvid=BVxxxxxxxx"
 }
 ```
 
-首页「视频」筛选项对应 `category` 中包含 `web` 的卡片；带 `video` 字段的卡片点击封面会弹出全屏播放层，按 `Esc` 或点击遮罩关闭。弹层底部提供「在 B 站打开」备用链接。
+摄影、视频作品若需出现在首页「推荐」筛选中，在 `category` 中追加 `recommend`，并设置 `mark: true` 显示推荐标记。首页「视频」筛选项对应 `category` 中包含 `web` 的卡片；带 `video` 字段的卡片点击封面会弹出全屏播放层，按 `Esc` 或点击遮罩关闭。弹层底部提供「在 B 站打开」备用链接。
 
 **控制台报错说明：** 嵌入 B 站播放器时，若浏览器安装了广告拦截插件（uBlock、AdGuard 等），可能出现 `ERR_BLOCKED_BY_CLIENT`、`gaia-gateway`、`bili-user-fingerprint` 等报错——这些来自 B 站 iframe 内部的统计/指纹脚本被拦截，**通常不影响播放**。若站内无法播放，可点击「在 B 站打开」跳转原视频页。
 
