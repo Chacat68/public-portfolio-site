@@ -4,7 +4,7 @@ import { socialLinks } from  '../data/content.ts';
 <div class="author border-bottom">
     <div class="social">
       {socialLinks.map((link) => (
-        <a href={link.url} target="_blank" class="social-link">
+        <a href={link.url} target="_blank" rel="noopener noreferrer" class="social-link" aria-label={link.name}>
           <Fragment set:html={link.icon} />
         </a>
       ))}

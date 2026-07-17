@@ -47,12 +47,14 @@ PUBLIC_GA4_ID=
 PUBLIC_UMAMI_ID=
 ```
 
-- `PUBLIC_SITE_URL`: Public site URL, used by sitemap, RSS, and SEO metadata.
+- `PUBLIC_SITE_URL`: **Required.** Public site URL for sitemap, RSS, and SEO metadata. Build fails if missing (no more `yoursite.com` fallback).
 - `PUBLIC_SITE_NAME`: Site name.
 - `PUBLIC_GA4_ID`: Optional Google Analytics 4 ID.
 - `PUBLIC_UMAMI_ID`: Optional Umami website ID.
 
 Leave `PUBLIC_GA4_ID` and `PUBLIC_UMAMI_ID` empty if you do not need analytics.
+
+> Homepage card `category` supports comma-separated values (e.g. `photography,recommend`); they are split into a JSON array for Shuffle filtering.
 
 ## Content And Data
 

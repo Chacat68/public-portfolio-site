@@ -3,14 +3,26 @@ import Icon from './Icon.astro';
 ---
 
 <theme-toggle>
-	<button>
-		<!-- <span class="sr-only">Dark theme</span> -->
+	<button type="button" aria-label="切换深色/浅色主题">
+		<span class="sr-only">切换深色/浅色主题</span>
 		<span class="icon light"><Icon icon="sun" /></span>
 		<span class="icon dark"><Icon icon="moon-stars" /></span>
 	</button>
 </theme-toggle>
 
 <style>
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
 	button {
 		display: flex;
 		border: 0;

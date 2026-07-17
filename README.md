@@ -28,6 +28,12 @@
 - Sharp，用于 Astro 图片优化
 - pnpm
 
+## 近期修复（2026-07）
+
+- RSS：`publishDate` 字段对齐，stylesheet 移至顶层，标题改用站点博客配置
+- 构建：缺少 `PUBLIC_SITE_URL` 时直接失败，避免 sitemap/RSS 指向占位域名
+- 首页：Shuffle `data-groups` 拆成数组、修正 sizer、去掉封面图多余括号
+- SEO/a11y：补齐 Open Graph、`lang="zh-CN"`、允许缩放、移动端主题切换、外链 `noopener`
 
 ### 字体选择
 
@@ -65,12 +71,14 @@ PUBLIC_GA4_ID=
 PUBLIC_UMAMI_ID=
 ```
 
-- `PUBLIC_SITE_URL`：网站公开地址，用于 sitemap、RSS 和 SEO 信息。
+- `PUBLIC_SITE_URL`：**必填**。网站公开地址，用于 sitemap、RSS 和 SEO 信息。未设置时构建会失败（不再回落到占位域名）。
 - `PUBLIC_SITE_NAME`：网站名称。
 - `PUBLIC_GA4_ID`：可选，Google Analytics 4 ID。
 - `PUBLIC_UMAMI_ID`：可选，Umami Website ID。
 
 如果不需要统计分析，可以留空 `PUBLIC_GA4_ID` 和 `PUBLIC_UMAMI_ID`。
+
+> **首页卡片 `category`**：支持逗号分隔多分类（如 `photography,recommend`），组件会拆成 JSON 数组供 Shuffle 筛选使用。
 
 ## 内容与数据
 
@@ -293,7 +301,7 @@ pnpm build
 
 | 变量名 | 说明 |
 |--------|------|
-| `PUBLIC_SITE_URL` | 站点正式 URL，如 `https://your-domain.pages.dev` |
+| `PUBLIC_SITE_URL` | **必填**，站点正式 URL，如 `https://your-domain.pages.dev` |
 | `PUBLIC_SITE_NAME` | 站点名称 |
 | `PUBLIC_GA4_ID` | （可选）Google Analytics 4 ID |
 | `PUBLIC_UMAMI_ID` | （可选）Umami 统计 ID |

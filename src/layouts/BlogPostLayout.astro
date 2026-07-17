@@ -12,13 +12,13 @@ interface Props {
 }
 const { title, description,keywords} = Astro.props;
 ---
-<html lang=en>
+<html lang="zh-CN">
 	<head>
 		<MainHead title={title} description={description}  keywords={keywords}/>
 	</head>
 	<body class="_body">
 		<div class="">
-			<Nav transition:persist/>
+			<Nav />
 			<div class="section post">
 				<div class="container">
 					<slot />

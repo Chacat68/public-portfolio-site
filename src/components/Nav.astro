@@ -2,7 +2,7 @@
 // import Icon, { Props as IconProps } from './Icon.astro';
 import ThemeToggle from './ThemeToggle.astro';
 // import Effect from "../effects/Effect.astro";
-import {nav} from '../data/content';
+import {nav, siteConfig} from '../data/content';
 // import EffectSwitch from "../effects/EffectSwitch.astro";
 import NavMobile from "../components/NavMobile.astro";
 ---
@@ -11,10 +11,10 @@ import NavMobile from "../components/NavMobile.astro";
 	<div class="container nav-wrapper">
 		<div class="menu-header">
 			<div class="site-title">
-				<a href="/" class="author">
+				<a href="/" class="author" aria-label="回到首页">
 					<figure class="avatar">
 						<img class="avatar__img"
-							src={nav.avatar} alt=""
+							src={nav.avatar} alt={siteConfig.siteName}
 							draggable="false">
 					</figure>
 				</a>
@@ -53,40 +53,6 @@ import NavMobile from "../components/NavMobile.astro";
 	</div>
 </nav>
 <!-- <Effect transition:persist/> -->
-<script>
-	class MenuButton extends HTMLElement {
-		constructor() {
-			super();
-
-			// Inject menu toggle button when JS runs.
-			this.appendChild(this.querySelector('template')!.content.cloneNode(true));
-			const btn = this.querySelector('button')!;
-
-			// Hide menu (shown by default to support no-JS browsers).
-			const menu = document.getElementById('menu-content')!;
-			menu.hidden = true;
-
-			/** Set whether the menu is currently expanded or collapsed. */
-			const setExpanded = (expand: boolean) => {
-				btn.setAttribute('aria-expanded', expand ? 'true' : 'false');
-				menu.hidden = !expand;
-			};
-
-			// Toggle menu visibility when the menu button is clicked.
-			btn.addEventListener('click', () => setExpanded(menu.hidden));
-
-			// Hide menu button for large screens.
-			const handleViewports = (e: MediaQueryList | MediaQueryListEvent) => {
-				setExpanded(e.matches);
-				btn.hidden = e.matches;
-			};
-			const mediaQueries = window.matchMedia('(min-width: 50em)');
-			handleViewports(mediaQueries);
-			mediaQueries.addEventListener('change', handleViewports);
-		}
-	}
-	customElements.define('menu-button', MenuButton);
-</script>
 
 <style>
 

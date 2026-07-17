@@ -8,14 +8,14 @@ import Filter from '../components/Filter.astro';
 import cardData from '../data/home.json';
 const cards = [];
 for (const [index,item] of cardData.entries()) {
-  const extra = item as { images?: string[] };
+  const extra = item as { images?: string[]; url?: string; detail?: string };
   const card = {
     id: item.id || index,
     title: item.title,
     cover: item.cover || "",
     description: item.desc || "",
-    url: item.url || "",
-    detail: item.detail || "",
+    url: extra.url || "",
+    detail: extra.detail || "",
     category: item.category || "other",
     tag: item.tag || "",
     date: item.date || "",
@@ -38,7 +38,7 @@ const count = cards.length;
             {cards.reverse().map((card) => (
               <div
                 class="card-item col-xs-1a col-md-2a col-lg-3a col-xxl-4a"
-                data-groups={JSON.stringify(card.category)}
+                data-groups={JSON.stringify(String(card.category).split(',').map((s) => s.trim()).filter(Boolean))}
                 data-date-created={card.date}
                 data-title={card.title}
                 data-full-img={card.hiRes || ""}
@@ -58,24 +58,24 @@ const count = cards.length;
                       </div>
                   </div>
                   <div class="card-body">
-                      <a href={card.detail ? card.detail:"javascript:void(0)"} class="card-figure" data-has-video={card.video ? "true" : undefined} target={card.detail ? "_blank":"_self"}>
-                        (<img class="card-figure__img lazy"
+                      <a href={card.detail ? card.detail:"javascript:void(0)"} class="card-figure" data-has-video={card.video ? "true" : undefined} target={card.detail ? "_blank":"_self"} rel={card.detail ? "noopener noreferrer" : undefined}>
+                        <img class="card-figure__img lazy"
                               src={card.cover} loading="lazy"
                               alt={card.title}
                               referrerpolicy="no-referrer"
-                        >)
+                        >
                       </a>
                   </div>
                   <div class="card-footer">
                       <div class="card-detail">
-                          <a href={card.detail ? card.detail :"javascript:void(0)"} target={card.detail ? "_blank":"_self"} class="card-name card-item__title">
+                          <a href={card.detail ? card.detail :"javascript:void(0)"} target={card.detail ? "_blank":"_self"} rel={card.detail ? "noopener noreferrer" : undefined} class="card-name card-item__title">
                             {card.mark && <span class="tag-original">推荐</span>}   {card.title}
                           </a>
                           <div class="card-info">
                             {card.description}
                           </div>
                       </div>
-                     {card.url && <a href={card.url ? card.url : "javascript:void(0)" } class="card-link card-link__go js-gotip" target={card.url ? "_blank" : "_self"}>
+                     {card.url && <a href={card.url ? card.url : "javascript:void(0)" } class="card-link card-link__go js-gotip" target={card.url ? "_blank" : "_self"} rel={card.url ? "noopener noreferrer" : undefined}>
                       </a> }
                   </div>
               </div>
@@ -145,7 +145,7 @@ class Demo {
     this.element = element;
     this.shuffle = new Shuffle(element, {
       itemSelector: '.card-item',
-      sizer: element.querySelector('.js-shuffle-sizer') });
+      sizer: document.getElementById('my-sizer-element') });
     this._activeFilters = [];
     this.addFilterButtons();
     this.addSorting();
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var videoUrl = cardItem.getAttribute('data-video') || '';
     var groups = '';
     try {
-      groups = JSON.parse(cardItem.getAttribute('data-groups') || '""');
+      groups = JSON.parse(cardItem.getAttribute('data-groups') || '[]');
     } catch(err) {}
     var isPhotography = groups.indexOf('photography') !== -1;
 

@@ -4,10 +4,11 @@ interface Props {
 	target?: string;
 }
 
-const { href="javascript:(void)",target="self" } = Astro.props;
+const { href = '#', target = '_self' } = Astro.props;
+const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
 ---
 
-<a href={href} target={target} class="post-btn"><slot /></a>
+<a href={href} target={target} rel={rel} class="post-btn"><slot /></a>
 
 <style>
 
