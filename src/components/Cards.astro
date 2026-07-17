@@ -33,11 +33,10 @@ const count = cards.length;
 ---
 <Filter count={count} />
 <div class="section card">
-    <div class="js-shuffle-sizer" >
-        <div class="card-list my-shuffle-container" id="js-shuffle">
+    <div class="card-list my-shuffle-container" id="js-shuffle">
             {cards.reverse().map((card) => (
               <div
-                class="card-item col-xs-1a col-md-2a col-lg-3a col-xxl-4a"
+                class="card-item col-1a col-md-2a col-lg-3a col-xxl-4a"
                 data-groups={JSON.stringify(String(card.category).split(',').map((s) => s.trim()).filter(Boolean))}
                 data-date-created={card.date}
                 data-title={card.title}
@@ -80,8 +79,8 @@ const count = cards.length;
                   </div>
               </div>
               ))}
-        </div>
-        <div class="col-sm-1 col-xs-1 my-sizer-element" id="my-sizer-element"></div>
+        <!-- Shuffle 列宽参照：与卡片相同的栅格类，保证窄屏/多列计算正确 -->
+        <div class="col-1a col-md-2a col-lg-3a col-xxl-4a my-sizer-element" id="my-sizer-element" aria-hidden="true"></div>
     </div>
 </div>
 
@@ -647,6 +646,18 @@ document.addEventListener('DOMContentLoaded', () => {
         margin: 0 12px 36px 12px; */
         float: left;
         margin-bottom:1.5rem;
+    }
+    /* Shuffle 隐形量宽元素：与卡片同列宽类，高度为 0，不参与展示 */
+    :global(.my-sizer-element) {
+        visibility: hidden;
+        height: 0 !important;
+        min-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin: 0 !important;
+        overflow: hidden;
+        pointer-events: none;
+        border: 0 !important;
     }
     &-header{
         margin-bottom:6px;

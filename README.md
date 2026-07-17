@@ -32,7 +32,7 @@
 
 - RSS：`publishDate` 字段对齐，stylesheet 移至顶层，标题改用站点博客配置
 - 构建：缺少 `PUBLIC_SITE_URL` 时直接失败，避免 sitemap/RSS 指向占位域名
-- 首页：Shuffle `data-groups` 拆成数组、修正 sizer、去掉封面图多余括号
+- 首页：Shuffle `data-groups` 拆成数组、修正 sizer（与卡片同列宽类并置于容器内）、去掉封面图多余括号
 - SEO/a11y：补齐 Open Graph、`lang="zh-CN"`、允许缩放、移动端主题切换、外链 `noopener`
 
 ### 字体选择

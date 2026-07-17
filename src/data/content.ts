@@ -1,5 +1,5 @@
 export const siteConfig = {
-    siteName: import.meta.env.PUBLIC_SITE_NAME || '见物',
+    siteName: import.meta.env.PUBLIC_SITE_NAME || '观世界',
     siteUrl: import.meta.env.PUBLIC_SITE_URL,
 }
 
@@ -36,9 +36,9 @@ interface SeoTdk {
 }
 // SEO TDK 首页
 export const homeTdk: SeoTdk = {
-	title: '见物 — 王权的产品摄影',
-	description: '王权的产品摄影作品 — 见物',
-	keywords: '王权,产品摄影,见物'
+	title: '观世界 — 王权的产品摄影',
+	description: '王权的产品摄影作品 — 观世界',
+	keywords: '王权,产品摄影,观世界'
 }
 // SEO TDK 博客
 export const blogTdk: SeoTdk = {
@@ -114,7 +114,7 @@ interface PageDescription {
 	about?: string
 }
 export const pageDescription: PageDescription = {
-	index: '见物 — 产品摄影是一种凝视。我是王权，在这里展示我的作品和一些想法。',
+	index: '观世界 — 产品摄影是一种凝视。我是王权，在这里展示我的作品和一些想法。',
 	project: "这是我的部分作品展示",
 	about: '专注于摄影、视觉叙事和影像创作',
 	blog: '这是我的个人笔记和想法， 希望你能够获得帮助！',
