@@ -36,7 +36,7 @@ const fileEnv = readDotEnv();
  * 2. CF_PAGES_URL（Cloudflare Pages 自动注入）
  * 3. 公开默认地址（非密钥；CI 未配置变量时避免构建失败）
  */
-const FALLBACK_SITE_URL = 'https://public-portfolio-site.pages.dev';
+const FALLBACK_SITE_URL = 'https://www.colinwangq.com/';
 const SITE_URL = (
   process.env.PUBLIC_SITE_URL ||
   fileEnv.PUBLIC_SITE_URL ||

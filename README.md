@@ -7,7 +7,7 @@
 
 ## 网站预览
 
-- 线上地址：以你的 `PUBLIC_SITE_URL` 为准
+- 线上地址：[www.colinwangq.com](https://www.colinwangq.com/)
 - 仓库：本仓库
 
 <img src="public/preview.jpg" alt="Site Preview" width="640" style="display:inline-block;margin:12px 0;">
@@ -61,7 +61,7 @@ pnpm dev
 复制 `.env.example` 为 `.env`，然后按需填写：
 
 ```bash
-PUBLIC_SITE_URL=https://example.com/
+PUBLIC_SITE_URL=https://www.colinwangq.com/
 PUBLIC_SITE_NAME="观世界"
 PUBLIC_GA4_ID=
 PUBLIC_UMAMI_ID=
@@ -224,10 +224,10 @@ Git 连接自动部署时，CI **读不到** 本地 `.env`。请在 Cloudflare D
 
 | 变量名 | 示例值 |
 |--------|--------|
-| `PUBLIC_SITE_URL` | `https://public-portfolio-site.pages.dev`（或你的自定义域名） |
+| `PUBLIC_SITE_URL` | `https://www.colinwangq.com/` |
 | `PUBLIC_SITE_NAME` | `观世界` |
 
-未配置时，构建会回退到 `https://public-portfolio-site.pages.dev`，并在日志中打印警告。
+未配置时，构建会回退到 `https://www.colinwangq.com/`，并在日志中打印警告。
 
 ## License
 
