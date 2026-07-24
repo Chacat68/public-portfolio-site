@@ -96,7 +96,7 @@ import NavMobile from "../components/NavMobile.astro";
 		font-size: 1.5rem;
 		letter-spacing: 0.1px;
 		&:hover{
-			color:rgb(236, 72, 113);
+			color: var(--color-200);
 		}
 	}
 	.logo {
@@ -149,11 +149,20 @@ import NavMobile from "../components/NavMobile.astro";
 		display: inline-block;
 		color: var(--color-300);
 		text-decoration: none;
+		border-bottom: 1px solid transparent;
+		padding-bottom: 0.15rem;
+		transition: color 0.25s ease, border-color 0.25s ease;
+	}
+
+	.link:hover {
+		color: var(--color-100);
+		border-bottom-color: rgba(26, 26, 26, 0.35);
 	}
 
 	.link.active {
 		color: var(--color-100);
-		font-weight: bold;
+		font-weight: 500;
+		border-bottom-color: var(--color-100);
 	}
 
 	.menu-footer {

@@ -1,0 +1,119 @@
+---
+/**
+ * 首页底部联系区
+ */
+import CallToAction from '../CallToAction.astro';
+---
+
+<section class="contact-band reveal-section" aria-labelledby="contact-title">
+	<div class="container contact-band__inner">
+		<div class="contact-band__copy">
+			<p class="contact-band__eyebrow">预约</p>
+			<h2 id="contact-title" class="contact-band__title font-huiwen">开始一个拍摄项目</h2>
+			<p class="contact-band__desc">
+				欢迎告知品牌、品类与大致档期。通常 1 个工作日内回复，也可直接邮件说明需求。
+			</p>
+		</div>
+		<div class="contact-band__actions">
+			<button type="button" class="cta cta--primary wechat">微信预约</button>
+			<CallToAction href="mailto:colinwangq@163.com" variant="secondary">发送邮件</CallToAction>
+		</div>
+	</div>
+</section>
+
+<style>
+	.contact-band {
+		padding: 5rem 0 6rem;
+	}
+
+	.contact-band__inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 2rem;
+		padding-top: 2.5rem;
+		border-top: 1px solid var(--border);
+	}
+
+	.contact-band__eyebrow {
+		font-size: 0.75rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-400);
+		margin-bottom: 0.75rem;
+	}
+
+	.contact-band__title {
+		font-size: clamp(1.75rem, 3vw, 2.35rem);
+		font-weight: 400;
+		color: var(--color-0);
+		letter-spacing: 0.04em;
+		margin-bottom: 0.75rem;
+	}
+
+	.contact-band__desc {
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--color-300);
+		max-width: 28rem;
+	}
+
+	.contact-band__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 148px;
+		padding: 0.95em 1.75em;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		line-height: 1.1;
+		border-radius: var(--radius);
+		border: 1px solid transparent;
+		cursor: pointer;
+		transition:
+			background-color 0.25s ease,
+			color 0.25s ease,
+			border-color 0.25s ease,
+			transform 0.25s ease;
+	}
+
+	.cta--primary {
+		background: var(--gallery-ink, #1a1a1a);
+		color: #f7f7f5;
+		border-color: var(--gallery-ink, #1a1a1a);
+	}
+
+	.cta--primary:hover {
+		background: #2a2a2a;
+		transform: translateY(-1px);
+	}
+
+	:global(.theme-dark) .cta--primary {
+		background: #f0f0ee;
+		color: #141414;
+		border-color: #f0f0ee;
+	}
+
+	@media (max-width: 576px) {
+		.contact-band {
+			padding: 3.5rem 0 4.5rem;
+		}
+
+		.contact-band__actions {
+			width: 100%;
+		}
+
+		.cta,
+		:global(.contact-band .cta) {
+			flex: 1 1 auto;
+		}
+	}
+</style>

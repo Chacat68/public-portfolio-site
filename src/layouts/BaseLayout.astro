@@ -3,6 +3,7 @@
 import MainHead from '../components/MainHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import Wechat from '../components/Wechat.astro';
 interface Props {
 	title?: string | undefined;
 	description?: string | undefined;
@@ -19,6 +20,7 @@ const { title, description,keywords } = Astro.props;
 			<Nav />
 			<slot />
 			<Footer />
+			<Wechat />
 		</div>
 
 		<script>

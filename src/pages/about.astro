@@ -1,81 +1,121 @@
 ---
-import BlogPostLayout from "../layouts/BlogPostLayout.astro";
-import SectionHeader from "../components/SectionHeader.astro";
-import CallToAction from "../components/CallToAction.astro";
-import {pageTag, pageDescription,aboutTdk} from '../data/content';
+import BlogPostLayout from '../layouts/BlogPostLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { pageTag, pageDescription, aboutTdk } from '../data/content';
 
-const portraitUrl = 'https://blog-1259751088.cos.ap-shanghai.myqcloud.com/20260624134214913.webp?imageSlim';
+const portraitUrl =
+	'https://blog-1259751088.cos.ap-shanghai.myqcloud.com/20260624134214913.webp?imageSlim';
 ---
+
 <BlogPostLayout
 	title={aboutTdk.title || ''}
-	description = {aboutTdk.description || ''}
-	keywords = {aboutTdk.keywords || ''}
+	description={aboutTdk.description || ''}
+	keywords={aboutTdk.keywords || ''}
 >
-
 	<div class="post">
 		<main class="post-wrapper about">
-			<SectionHeader
-				tag={pageTag.about}
-				description={pageDescription.about}>
-				 关于我
+			<SectionHeader tag={pageTag.about} description={pageDescription.about}>
+				关于我
 			</SectionHeader>
-			<section class="border-top" style="padding-top: 2rem;">
+			<section class="border-top about-intro">
 				<div class="content">
-					<div style="text-align:center">
-						<img src={portraitUrl} alt="portrait" width="88" height="88" class="portrait" />
+					<div class="about-portrait">
+						<img src={portraitUrl} alt="王权" width="96" height="96" class="portrait" />
 					</div>
 					<p>
-						我是 <strong style="font-size:1.2em">王权</strong>，一名摄影师，专注于用镜头捕捉光影、记录瞬间。从街头纪实到人像创作，我始终在寻找画面中那个恰到好处的时刻。
+						我是 <strong>王权</strong>，产品与空间摄影师，品牌名<strong>观世界</strong>。
+						专注用克制的光影呈现材质、尺度与使用场景，服务品牌主图、家装空间与影像短片。
 					</p>
-					<p>
-						目前我在持续拍摄和创作，探索视觉叙事的不同可能性——每一张照片都是一个独立的故事。
-					</p>
-
+					<p>可合作范围包括：产品静物、室内与展陈空间、节气 / 品牌短片。欢迎先沟通品类、参考风格与档期。</p>
 				</div>
 			</section>
 			<section>
-				<h3 class="post-title">工作之外</h3>
+				<h3 class="post-title">如何开始合作</h3>
 				<div class="content">
-					<p>
-						除了日常拍摄之外，我喜欢将空闲时间投入到个人项目中——整理作品集、研究后期技术、探索不同器材的表现力。也喜欢在城市里漫无目的地走，带着相机，看看会撞见什么。
+					<p>请通过微信或邮件留言：品牌名称、拍摄对象、期望交付时间。通常 1 个工作日内回复。</p>
+					<p class="about-actions">
+						<button type="button" class="cta cta--primary wechat">微信预约</button>
+						<CallToAction href="mailto:colinwangq@163.com" variant="secondary">发送邮件</CallToAction>
 					</p>
-					<p>如果你也喜欢摄影，欢迎交流。</p>
-					<p style="margin-top:24px;">
-						<CallToAction
-							target="_self"
-							href="mailto:colinwangq@163.com"
-						>
-							联系我
-						</CallToAction>
+					<p class="about-mail">
+						<a href="mailto:colinwangq@163.com">colinwangq@163.com</a>
 					</p>
 				</div>
 			</section>
-			<p></p>
-			<p></p>
 		</main>
 	</div>
 </BlogPostLayout>
 
 <style>
 	.about {
+		max-width: 720px;
+	}
+
+	.about-intro {
+		padding-top: 2rem;
+	}
+
+	.about-portrait {
+		text-align: center;
+		margin-bottom: 1.5rem;
+	}
+
+	.portrait {
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	.content p {
+		margin-bottom: 1rem;
+		line-height: 1.75;
+		color: var(--color-200);
+	}
+
+	.about-actions {
 		display: flex;
-		flex-direction: column;
-		margin:0 auto;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 1.5rem !important;
 	}
-	p{
-		margin:0.75rem 0;
+
+	.about-mail {
+		margin-top: 1rem;
+		font-size: 0.9rem;
 	}
-	figure{
-		margin:2rem 0;
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 148px;
+		padding: 0.95em 1.75em;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		line-height: 1.1;
+		border-radius: var(--radius);
+		border: 1px solid transparent;
+		cursor: pointer;
+		transition:
+			background-color 0.25s ease,
+			transform 0.25s ease;
 	}
-	img{max-width: 100%;}
-	.portrait{
-		border-radius: 100px;
-		margin:12px 0 12px;
-		overflow: hidden;
-		text-align: left;
+
+	.cta--primary {
+		background: var(--gallery-ink, #1a1a1a);
+		color: #f7f7f5;
+		border-color: var(--gallery-ink, #1a1a1a);
 	}
-	a, a:link{
-		color:var(--color-blue);
+
+	.cta--primary:hover {
+		background: #2a2a2a;
+		transform: translateY(-1px);
+	}
+
+	:global(.theme-dark) .cta--primary {
+		background: #f0f0ee;
+		color: #141414;
+		border-color: #f0f0ee;
 	}
 </style>

@@ -8,7 +8,7 @@ import Filter from '../components/Filter.astro';
 import cardData from '../data/home.json';
 const cards = [];
 for (const [index,item] of cardData.entries()) {
-  const extra = item as { images?: string[]; url?: string; detail?: string };
+  const extra = item as { images?: string[]; url?: string; detail?: string; ratio?: string };
   const card = {
     id: item.id || index,
     title: item.title,
@@ -24,6 +24,8 @@ for (const [index,item] of cardData.entries()) {
     // 单卡多图：优先用 images；否则用 hiRes 或 cover
     images: Array.isArray(extra.images) ? extra.images : [],
     video: item.video || "",
+    // 封面比例，如 "3/4"、"16/9"；默认竖构图
+    ratio: extra.ratio || (item.video ? "16/9" : "3/4"),
     index: index + 1,
   };
   cards.push(card);
@@ -34,9 +36,10 @@ const count = cards.length;
 <Filter count={count} />
 <div class="section card">
     <div class="card-list my-shuffle-container" id="js-shuffle">
-            {cards.reverse().map((card) => (
+            {cards.reverse().map((card, i) => (
               <div
                 class="card-item col-1a col-md-2a col-lg-3a col-xxl-4a"
+                style={`--stagger: ${i * 60}ms`}
                 data-groups={JSON.stringify(String(card.category).split(',').map((s) => s.trim()).filter(Boolean))}
                 data-date-created={card.date}
                 data-title={card.title}
@@ -48,16 +51,8 @@ const count = cards.length;
                 )}
                 data-video={card.video || ""}
               >
-                  <div class="card-header">
-                      <div class="card-type type">
-                          <span class="type-tag">- {card.tag} - </span>
-                      </div>
-                      <div class="card-type type">
-                          <span class="type-tag">(0{card.index})</span>
-                      </div>
-                  </div>
                   <div class="card-body">
-                      <a href={card.detail ? card.detail:"javascript:void(0)"} class="card-figure" data-has-video={card.video ? "true" : undefined} target={card.detail ? "_blank":"_self"} rel={card.detail ? "noopener noreferrer" : undefined}>
+                      <a href={card.detail ? card.detail:"javascript:void(0)"} class="card-figure" style={`aspect-ratio: ${card.ratio}`} data-has-video={card.video ? "true" : undefined} target={card.detail ? "_blank":"_self"} rel={card.detail ? "noopener noreferrer" : undefined}>
                         <img class="card-figure__img lazy"
                               src={card.cover} loading="lazy"
                               alt={card.title}
@@ -68,13 +63,14 @@ const count = cards.length;
                   <div class="card-footer">
                       <div class="card-detail">
                           <a href={card.detail ? card.detail :"javascript:void(0)"} target={card.detail ? "_blank":"_self"} rel={card.detail ? "noopener noreferrer" : undefined} class="card-name card-item__title">
-                            {card.mark && <span class="tag-original">推荐</span>}   {card.title}
+                            {card.mark && <span class="tag-original">精选</span>}{card.title}
                           </a>
-                          <div class="card-info">
-                            {card.description}
+                          <div class="card-meta">
+                            <span class="card-tag">{card.tag}</span>
+                            {card.description && <span class="card-info">{card.description}</span>}
                           </div>
                       </div>
-                     {card.url && <a href={card.url ? card.url : "javascript:void(0)" } class="card-link card-link__go js-gotip" target={card.url ? "_blank" : "_self"} rel={card.url ? "noopener noreferrer" : undefined}>
+                     {card.url && <a href={card.url ? card.url : "javascript:void(0)" } class="card-link card-link__go js-gotip" target={card.url ? "_blank" : "_self"} rel={card.url ? "noopener noreferrer" : undefined} aria-label="打开外链">
                       </a> }
                   </div>
               </div>
@@ -598,54 +594,34 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style lang="scss">
-.type{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 12px;
-}
-.type-tag{
-    display: inline-block;
-    height: 20px;
-    padding: 0 10px;
-    line-height: 20px;
-    font-size: 12px;
-    font-weight: 400;
-    border-radius: 4px;
-    /* border: 1px solid var(--color-200); */
-    vertical-align: middle;
-    color: var(--color-100);
-    letter-spacing: 1px;
-    white-space: nowrap;
-}
 .tag-original{
-  display: block;
-  height: 22px;
-  padding: 0 8px;
-  line-height: 22px;
-  font-size: 12px;
-  font-weight: 400;
-  border-radius: 4px;
-  vertical-align: middle;
-  color: var(--color-900);
-  letter-spacing: 1px;
-  white-space: nowrap;
-  background-color: var(--color-blue);
-  margin-right:6px;
+  display: inline-block;
+  height: auto;
+  padding: 0;
+  margin-right: 0.4rem;
+  line-height: inherit;
+  font-size: 0.7em;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--color-400);
+  background: transparent;
+  border-radius: 0;
+  vertical-align: baseline;
 }
 .card{
     &-list{
         display: flex;
         flex-wrap: wrap;
         width: 100%;
-        margin:48px auto 48px;
-
+        margin: 1.5rem auto 3rem;
     }
     &-item{
-        /* width: calc( 33.33% - 12px );
-        margin: 0 12px 36px 12px; */
         float: left;
-        margin-bottom:1.5rem;
+        margin-bottom: 2rem;
+        opacity: 0;
+        transform: translateY(14px);
+        animation: card-enter 0.65s ease forwards;
+        animation-delay: var(--stagger, 0ms);
     }
     /* Shuffle 隐形量宽元素：与卡片同列宽类，高度为 0，不参与展示 */
     :global(.my-sizer-element) {
@@ -659,12 +635,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pointer-events: none;
         border: 0 !important;
     }
-    &-header{
-        margin-bottom:6px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
     &-body{
         font-size: 0;
     }
@@ -672,43 +642,43 @@ document.addEventListener('DOMContentLoaded', () => {
         width: 100%;
         height: auto;
         max-width: 100%;
-        background-color: rgba(0,0,0,.02);
-        border-radius: var(--radius);
-        /* padding-bottom: 56%; */
-        padding-bottom: calc(2 * 100% / 3);
-        display: inline-block;
+        aspect-ratio: 3 / 4;
+        background-color: rgba(0,0,0,.03);
+        border-radius: 0;
+        display: block;
         position: relative;
         overflow: hidden;
-        border: 1px solid var(--border);
+        border: none;
         &__img{
             position: absolute;
             width: 100%;
             height: 100%;
             left: 0;
             top: 0;
-            -o-object-fit: cover;
             object-fit: cover;
-            transition: all 0.5s;
+            transition: transform 0.7s ease, filter 0.5s ease;
         }
         &[data-has-video="true"]::after {
             content: '';
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 56px;
-            height: 56px;
-            margin: -28px 0 0 -28px;
+            width: 48px;
+            height: 48px;
+            margin: -24px 0 0 -24px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center / 28px no-repeat;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 7.5v9l8-4.5z'/%3E%3C/svg%3E") center / 22px no-repeat;
             pointer-events: none;
             transition: transform 0.35s ease, background-color 0.35s ease;
         }
         &[data-has-video="true"]:hover::after {
-            transform: scale(1.08);
-            background-color: rgba(0, 0, 0, 0.7);
+            transform: scale(1.06);
+            background-color: rgba(0, 0, 0, 0.25);
         }
         &:hover  .card-figure__img{
-            transform:scale(1.05);
+            transform: scale(1.035);
+            filter: brightness(1.04);
         }
         &__video{
             position: absolute;
@@ -716,43 +686,53 @@ document.addEventListener('DOMContentLoaded', () => {
             height: 100%;
             left: 0;
             top: 0;
-            -o-object-fit: cover;
             object-fit: cover;
             transition: all 0.5s;
         }
         &:hover  .card-figure__video{
             transform:scale(1.05);
         }
-
     }
     &-footer{
         width: 100%;
-        margin-top:12px;
-        margin-bottom:12px;
+        margin-top: 0.85rem;
+        margin-bottom: 0;
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
+        gap: 0.75rem;
     }
     &-name{
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--color-200);
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        color: var(--color-100);
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
         display: flex;
-        align-items: center;
+        align-items: baseline;
+    }
+    &-meta{
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        margin-top: 0.3rem;
+    }
+    &-tag{
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-400);
     }
     &-info{
         display: block;
-        font-size: 14px;
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         color: var(--color-300);
         font-weight: 400;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        margin-top: 4px;
     }
     &-link__go {
             background-repeat: no-repeat;
@@ -763,11 +743,27 @@ document.addEventListener('DOMContentLoaded', () => {
             text-decoration: none;
             display: block;
             position: relative;
+            flex-shrink: 0;
             transition: all 0.35s ease-in-out;
             &:hover {
             transform: rotate(45deg);
            }
     }
+}
+
+@keyframes card-enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Lightbox */

@@ -4,32 +4,59 @@ import { footerText } from '../data/content';
 
 <footer>
 	<div class="group">
+		<p class="footer-links">
+			<a href="/#works">作品</a>
+			<span aria-hidden="true">·</span>
+			<a href="/about">关于</a>
+			<span aria-hidden="true">·</span>
+			<a href="/blog">博客</a>
+			<span aria-hidden="true">·</span>
+			<button type="button" class="footer-wechat wechat">微信预约</button>
+		</p>
 		<p>{footerText}</p>
 	</div>
-
 </footer>
 <style>
 	footer {
 		display: flex;
 		flex-direction: column;
-		gap: 3rem;
-		margin-top: 4rem;
-		padding: 3rem 2rem 3rem;
+		gap: 1.25rem;
+		margin-top: 2rem;
+		padding: 2.5rem 2rem 3rem;
 		text-align: center;
 		color: var(--color-400);
 		font-size: var(--text-sm);
+		border-top: 1px solid var(--border);
 	}
 
-	footer a {
+	footer a,
+	.footer-wechat {
 		color: var(--color-400);
 		text-decoration: 1px solid underline transparent;
 		text-underline-offset: 0.25em;
-		transition: text-decoration-color var(--theme-transition);
+		transition: text-decoration-color var(--theme-transition), color var(--theme-transition);
+		background: none;
+		border: none;
+		font: inherit;
+		cursor: pointer;
+		padding: 0;
 	}
 
 	footer a:hover,
-	footer a:focus {
+	footer a:focus,
+	.footer-wechat:hover,
+	.footer-wechat:focus {
+		color: var(--color-200);
 		text-decoration-color: currentColor;
+	}
+
+	.footer-links {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.65rem;
+		flex-wrap: wrap;
+		margin-bottom: 0.75rem;
 	}
 
 	.group {
@@ -40,13 +67,4 @@ import { footerText } from '../data/content';
 	.group p{
 		text-align: center;
 	}
-
-	.socials {
-		display: flex;
-		justify-content: center;
-		gap: 1rem;
-		flex-wrap: wrap;
-	}
-
 </style>
-

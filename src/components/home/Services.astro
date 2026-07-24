@@ -1,0 +1,102 @@
+---
+/**
+ * 服务类型区：产品 / 空间 / 影像
+ */
+const services = [
+	{
+		title: '产品静物',
+		desc: '材质、轮廓与卖点一眼可读，适合电商主图、品牌手册与投放物料。',
+	},
+	{
+		title: '空间场景',
+		desc: '家装、展陈与商业空间的光影记录，强调真实尺度与氛围。',
+	},
+	{
+		title: '影像短片',
+		desc: '节气、品牌叙事与产品动态呈现，补足静态画面之外的节奏感。',
+	},
+];
+---
+
+<section class="services reveal-section" aria-labelledby="services-title">
+	<div class="container">
+		<header class="services__header">
+			<p class="services__eyebrow">服务</p>
+			<h2 id="services-title" class="services__title font-huiwen">可合作的拍摄类型</h2>
+		</header>
+		<ul class="services__list">
+			{services.map((item) => (
+				<li class="services__item">
+					<h3 class="services__item-title">{item.title}</h3>
+					<p class="services__item-desc">{item.desc}</p>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.services {
+		padding: 5rem 0 4rem;
+	}
+
+	.services__header {
+		margin-bottom: 2.5rem;
+		max-width: 36rem;
+	}
+
+	.services__eyebrow {
+		font-size: 0.75rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-400);
+		margin-bottom: 0.75rem;
+	}
+
+	.services__title {
+		font-size: clamp(1.75rem, 3vw, 2.25rem);
+		font-weight: 400;
+		color: var(--color-0);
+		letter-spacing: 0.04em;
+	}
+
+	.services__list {
+		list-style: none;
+		display: grid;
+		gap: 0;
+		border-top: 1px solid var(--border);
+	}
+
+	.services__item {
+		display: grid;
+		grid-template-columns: minmax(7rem, 11rem) 1fr;
+		gap: 1.25rem 2rem;
+		padding: 1.5rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.services__item-title {
+		font-size: 1.05rem;
+		font-weight: 500;
+		color: var(--color-100);
+		letter-spacing: 0.06em;
+	}
+
+	.services__item-desc {
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: var(--color-300);
+		max-width: 36rem;
+	}
+
+	@media (max-width: 576px) {
+		.services {
+			padding: 3.5rem 0 2.5rem;
+		}
+
+		.services__item {
+			grid-template-columns: 1fr;
+			gap: 0.5rem;
+		}
+	}
+</style>

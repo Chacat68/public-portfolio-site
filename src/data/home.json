@@ -5,20 +5,15 @@
 		"title": "厨房",
 		"desc": "家装案例 — 厨房空间",
 		"category": "photography,recommend",
-		"tag": "摄影",
+		"tag": "空间",
 		"date": "2024-07-05",
 		"mark": true,
-		"hiRes": "",
+		"ratio": "3/4",
+		"hiRes": "https://blog-1259751088.cos.ap-shanghai.myqcloud.com/20260624134252329.webp?imageSlim",
+		"images": [
+			"https://blog-1259751088.cos.ap-shanghai.myqcloud.com/20260624134252329.webp?imageSlim"
+		],
 		"video": ""
-	},
-	{
-		"id": "2",
-		"cover": "/assets/cover/cover-3d-cloud.jpg",
-		"title": "【示例】Blender 云服务场景",
-		"desc": "Blender, Cloud",
-		"category": "3d",
-		"tag": "3D",
-		"date": "2024-07-05"
 	},
 	{
 		"id": "video-1",
@@ -26,9 +21,10 @@
 		"title": "春分",
 		"desc": "2023 春分 — 昼夜均而寒暑平",
 		"category": "video,recommend",
-		"tag": "视频",
+		"tag": "影像",
 		"date": "2026-06-24",
 		"mark": true,
+		"ratio": "16/9",
 		"video": "https://player.bilibili.com/player.html?bvid=BV19g4y1x7A9"
 	},
 	{
@@ -37,9 +33,10 @@
 		"title": "清明",
 		"desc": "2023 清明 — 万物生长此时，皆清洁而明净",
 		"category": "video,recommend",
-		"tag": "视频",
+		"tag": "影像",
 		"date": "2026-06-24",
 		"mark": true,
+		"ratio": "16/9",
 		"video": "https://player.bilibili.com/player.html?bvid=BV1dc411p79y"
 	}
 ]

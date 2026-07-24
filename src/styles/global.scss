@@ -104,8 +104,8 @@
     --color-900: #f9f8f7;
     --color-999-basis: 0, 0%, 100%;
     --color-999_40: hsla(var(--color-999-basis), 0.4);
-    --color-999: #f9f8f7;
-    --color-999-rgb: 249, 248, 247;
+    --color-999: #f7f7f5;
+    --color-999-rgb: 247, 247, 245;
     /* Colors */
     --accent-light: #808080;
     --accent-regular: #404040;
@@ -151,17 +151,25 @@
     --gap: 16px;
     --cell: 8px;
 
-    /* radius */
-    --radius-small: 4px;
-    --radius: 6px;
-    --radius-normal: 8px;
-    --radius-large: 12px;
+    /* radius — 展厅克制圆角 */
+    --radius-small: 2px;
+    --radius: 4px;
+    --radius-normal: 4px;
+    --radius-large: 6px;
 
     /* Fonts */
     --font-system: system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Lantinghei SC", "Microsoft YaHei", "HanHei SC", "Helvetica Neue", "Open Sans", "Hiragino Sans GB", 微软雅黑, STHeiti, "WenQuanYi Micro Hei", Arial, SimSun, sans-serif;
-    --font-body: "Inter", "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "MiSans", "Lantinghei SC", "Noto Sans SC", "Microsoft YaHei", "HanHei SC", "Helvetica Neue", "Open Sans", "Hiragino Sans GB", 微软雅黑, STHeiti, "WenQuanYi Micro Hei", Arial, SimSun, sans-serif;
-    --font-brand: "Inter", "Noto Sans SC", var(--font-system);
+    --font-body: "Noto Sans SC", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "MiSans", "Lantinghei SC", "Microsoft YaHei", "HanHei SC", "Helvetica Neue", "Open Sans", "Hiragino Sans GB", 微软雅黑, STHeiti, "WenQuanYi Micro Hei", Arial, SimSun, sans-serif;
+    --font-brand: "Huiwen-mincho", "Noto Sans SC", var(--font-system);
+    --font-display: "Huiwen-mincho", var(--font-brand);
     --font-type: 'Special Elite', var(--font-system);
+
+    /* 展厅氛围 */
+    --gallery-ink: #1a1a1a;
+    --gallery-ink-soft: #3a3a3a;
+    --gallery-mist: #f7f7f5;
+    --gallery-atmosphere: radial-gradient(120% 80% at 50% -10%, rgba(26, 26, 26, 0.04), transparent 55%),
+        linear-gradient(180deg, #f7f7f5 0%, #f3f3f1 100%);
     /* Transitions */
     --theme-transition: 0.25s ease-in-out;
     --text-size: 16px;
@@ -251,13 +259,17 @@
 
     --link-color: var(--accent-dark);
 
-    --gradient-stop-1: #4c11c6;
+    --gradient-stop-1: #2a2a2a;
+    --gradient-stop-2: #505050;
+    --gradient-stop-3: #a0a0a0;
     --gradient-subtle: linear-gradient(150deg, var(--color-900) 19%, var(--color-999) 81%);
     --gradient-accent-orange: linear-gradient(150deg,
-            #ca7879,
+            #6a6a6a,
             var(--accent-regular),
             var(--accent-light));
     --gradient-stroke: linear-gradient(180deg, var(--color-600), var(--color-800));
+    --gallery-atmosphere: radial-gradient(120% 80% at 50% -10%, rgba(255, 255, 255, 0.04), transparent 55%),
+        linear-gradient(180deg, #141414 0%, #19191b 100%);
 
     --shadow-sm: 0px 6px 3px rgba(255, 255, 255, 0.01), 0px 4px 2px rgba(255, 255, 255, 0.01),
         0px 2px 2px rgba(255, 255, 255, 0.02), 0px 0px 1px rgba(255, 255, 255, 0.03);
@@ -281,6 +293,8 @@ body {
     height: 100%;
     overflow-x: hidden;
     background-color: var(--color-999);
+    background-image: var(--gallery-atmosphere);
+    background-attachment: scroll;
     color: var(--color-100);
     font-family: var(--font-body) !important;
     -webkit-font-smoothing: antialiased;
@@ -288,6 +302,11 @@ body {
     font-size: var(--text-size);
     font-weight: 400;
     letter-spacing: 0.2px;
+
+    /* fixed 背景在移动端易卡顿，仅桌面启用 */
+    @media (min-width: 768px) {
+        background-attachment: fixed;
+    }
 }
 
 *,

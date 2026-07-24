@@ -1,0 +1,225 @@
+---
+/**
+ * 首页首屏：品牌主导 + 全幅影像背景 + 获客 CTA
+ */
+import CallToAction from '../CallToAction.astro';
+import { siteConfig } from '../../data/content';
+
+interface Props {
+	image?: string;
+	headline?: string;
+	support?: string;
+}
+
+const {
+	image = 'https://blog-1259751088.cos.ap-shanghai.myqcloud.com/20260624134252329.webp?imageSlim',
+	headline = '产品与空间的光影叙事',
+	support = '为品牌与空间提供克制、可信的商业影像，服务产品静物、室内场景与短片创作。',
+} = Astro.props;
+---
+
+<section class="hero-showcase" aria-label="品牌首屏">
+	<div class="hero-showcase__media" aria-hidden="true">
+		<img
+			class="hero-showcase__img"
+			src={image}
+			alt=""
+			fetchpriority="high"
+			referrerpolicy="no-referrer"
+		/>
+		<div class="hero-showcase__veil"></div>
+	</div>
+	<div class="hero-showcase__content container">
+		<h1 class="hero-showcase__brand font-huiwen">{siteConfig.siteName}</h1>
+		<p class="hero-showcase__headline">{headline}</p>
+		<p class="hero-showcase__support">{support}</p>
+		<div class="hero-showcase__actions">
+			<button type="button" class="cta cta--primary wechat">预约拍摄</button>
+			<CallToAction href="#works" variant="secondary">浏览作品</CallToAction>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero-showcase {
+		position: relative;
+		min-height: calc(100svh - 64px);
+		display: flex;
+		align-items: flex-end;
+		overflow: hidden;
+		color: #f7f7f5;
+	}
+
+	.hero-showcase__media {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+	}
+
+	.hero-showcase__img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		transform: scale(1.04);
+		opacity: 0;
+		animation: hero-in 1.4s ease forwards, hero-drift 28s ease-in-out 1.4s infinite alternate;
+	}
+
+	.hero-showcase__veil {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(180deg, rgba(10, 10, 10, 0.15) 0%, rgba(10, 10, 10, 0.55) 55%, rgba(10, 10, 10, 0.78) 100%),
+			linear-gradient(90deg, rgba(10, 10, 10, 0.35) 0%, transparent 45%);
+	}
+
+	.hero-showcase__content {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+		padding: 4rem 0 5rem;
+		max-width: 42rem;
+	}
+
+	.hero-showcase__brand {
+		font-size: clamp(2.75rem, 8vw, 5.5rem);
+		line-height: 1;
+		letter-spacing: 0.08em;
+		margin-bottom: 1.25rem;
+		font-weight: 400;
+		color: #f7f7f5;
+		opacity: 0;
+		animation: fade-up 0.9s ease 0.25s forwards;
+	}
+
+	.hero-showcase__headline {
+		font-family: var(--font-body);
+		font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+		font-weight: 400;
+		letter-spacing: 0.12em;
+		color: rgba(247, 247, 245, 0.92);
+		margin-bottom: 0.85rem;
+		opacity: 0;
+		animation: fade-up 0.9s ease 0.4s forwards;
+	}
+
+	.hero-showcase__support {
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: rgba(247, 247, 245, 0.72);
+		max-width: 28rem;
+		margin-bottom: 1.75rem;
+		opacity: 0;
+		animation: fade-up 0.9s ease 0.55s forwards;
+	}
+
+	.hero-showcase__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		opacity: 0;
+		animation: fade-up 0.9s ease 0.7s forwards;
+	}
+
+	/* 与 CallToAction 视觉对齐的 button 样式 */
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 148px;
+		padding: 0.95em 1.75em;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		line-height: 1.1;
+		border-radius: var(--radius);
+		border: 1px solid transparent;
+		cursor: pointer;
+		transition:
+			background-color 0.25s ease,
+			color 0.25s ease,
+			border-color 0.25s ease,
+			transform 0.25s ease;
+	}
+
+	.cta--primary {
+		background: #f7f7f5;
+		color: #1a1a1a;
+		border-color: #f7f7f5;
+	}
+
+	.cta--primary:hover {
+		background: #ffffff;
+		transform: translateY(-1px);
+	}
+
+	:global(.hero-showcase .cta--secondary) {
+		color: #f7f7f5 !important;
+		border-color: rgba(247, 247, 245, 0.45);
+	}
+
+	:global(.hero-showcase .cta--secondary:hover) {
+		border-color: #f7f7f5;
+		background: rgba(247, 247, 245, 0.08);
+	}
+
+	@keyframes hero-in {
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@keyframes hero-drift {
+		from {
+			transform: scale(1) translate3d(0, 0, 0);
+		}
+		to {
+			transform: scale(1.06) translate3d(-1.5%, -1%, 0);
+		}
+	}
+
+	@keyframes fade-up {
+		from {
+			opacity: 0;
+			transform: translateY(12px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (max-width: 767px) {
+		.hero-showcase {
+			min-height: calc(100svh - 56px);
+			align-items: flex-end;
+		}
+
+		.hero-showcase__content {
+			padding: 3rem 0 3.5rem;
+		}
+
+		.hero-showcase__actions {
+			width: 100%;
+		}
+
+		.cta,
+		:global(.hero-showcase .cta) {
+			flex: 1 1 auto;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero-showcase__img,
+		.hero-showcase__brand,
+		.hero-showcase__headline,
+		.hero-showcase__support,
+		.hero-showcase__actions {
+			animation: none;
+			opacity: 1;
+			transform: none;
+		}
+	}
+</style>

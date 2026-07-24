@@ -1,27 +1,131 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Cards from "../components/Cards.astro";
-import SectionHeader from "../components/SectionHeader.astro";
-import {pageDescription, homeTdk, siteConfig} from '../data/content';
+import Cards from '../components/Cards.astro';
+import HeroShowcase from '../components/home/HeroShowcase.astro';
+import Services from '../components/home/Services.astro';
+import Process from '../components/home/Process.astro';
+import ContactBand from '../components/home/ContactBand.astro';
+import { homeTdk } from '../data/content';
 ---
 
 <BaseLayout
-title={homeTdk.title  || ''}
-description ={homeTdk.description  || ''}
-keywords = {homeTdk.keywords  || ''}
+	title={homeTdk.title || ''}
+	description={homeTdk.description || ''}
+	keywords={homeTdk.keywords || ''}
 >
-	<div class="section hero">
+	<HeroShowcase />
+	<Services />
+	<section id="works" class="works-section reveal-section" aria-labelledby="works-title">
 		<div class="container">
-			<SectionHeader
-				tag={siteConfig.siteName}
-				description={pageDescription.index}>
-    			记录&创作
-			</SectionHeader>
+			<header class="works-section__header">
+				<p class="works-section__eyebrow">作品</p>
+				<h2 id="works-title" class="works-section__title font-huiwen">精选影像</h2>
+				<p class="works-section__desc">点击封面可查看组图或播放视频。</p>
+			</header>
 			<Cards />
 		</div>
-	</div>
-
+	</section>
+	<Process />
+	<ContactBand />
 </BaseLayout>
 
+<style>
+	.works-section {
+		padding: 2rem 0 1rem;
+	}
 
+	.works-section__header {
+		margin-bottom: 0.5rem;
+		max-width: 36rem;
+	}
 
+	.works-section__eyebrow {
+		font-size: 0.75rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-400);
+		margin-bottom: 0.75rem;
+	}
+
+	.works-section__title {
+		font-size: clamp(1.75rem, 3vw, 2.25rem);
+		font-weight: 400;
+		color: var(--color-0);
+		letter-spacing: 0.04em;
+		margin-bottom: 0.5rem;
+	}
+
+	.works-section__desc {
+		font-size: 0.925rem;
+		color: var(--color-300);
+		line-height: 1.6;
+	}
+</style>
+
+<script>
+	/**
+	 * 渐进增强：默认 CSS 可见；仅在 JS 可用且开启动画后才隐藏未入视口区块，
+	 * 避免无 JS / 脚本失败时整页空白。
+	 */
+	(() => {
+		const nodes = document.querySelectorAll('.reveal-section');
+		if (!nodes.length) return;
+
+		const reduceMotion =
+			window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		if (reduceMotion || !('IntersectionObserver' in window)) {
+			nodes.forEach((el) => el.classList.add('is-visible'));
+			return;
+		}
+
+		// 先标记已在视口内的区块，再开启「隐藏未可见」模式，避免闪白
+		nodes.forEach((el) => {
+			const rect = el.getBoundingClientRect();
+			if (rect.top < window.innerHeight * 0.92) {
+				el.classList.add('is-visible');
+			}
+		});
+
+		const io = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('is-visible');
+						io.unobserve(entry.target);
+					}
+				});
+			},
+			{ rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
+		);
+
+		nodes.forEach((el) => io.observe(el));
+		document.documentElement.setAttribute('data-reveal', 'on');
+	})();
+</script>
+
+<style is:global>
+	/* 默认可见：无 JS 时内容始终可读 */
+	.reveal-section {
+		opacity: 1;
+		transform: none;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		html[data-reveal='on'] .reveal-section:not(.is-visible) {
+			opacity: 0;
+			transform: translateY(18px);
+			transition:
+				opacity 0.7s ease,
+				transform 0.7s ease;
+		}
+
+		html[data-reveal='on'] .reveal-section.is-visible {
+			opacity: 1;
+			transform: translateY(0);
+			transition:
+				opacity 0.7s ease,
+				transform 0.7s ease;
+		}
+	}
+</style>

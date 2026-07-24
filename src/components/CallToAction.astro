@@ -2,58 +2,98 @@
 interface Props {
 	href?: string;
 	target?: string;
+	variant?: 'primary' | 'secondary';
+	class?: string;
 }
 
-const { href = '#', target = '_self' } = Astro.props;
+const {
+	href = '#',
+	target = '_self',
+	variant = 'primary',
+	class: className = '',
+} = Astro.props;
 const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
 ---
 
-<a href={href} target={target} rel={rel} class="post-btn"><slot /></a>
+<a
+	href={href}
+	target={target}
+	rel={rel}
+	class:list={['cta', `cta--${variant}`, className]}
+>
+	<slot />
+</a>
 
 <style>
-
-	 a {
-		--btn-color: #101010;
-		--color--yellow: #f7d252;
-   		--color--dark-yellow: #ecba0e;
+	.cta {
 		position: relative;
 		display: inline-flex;
-		place-content: center;
-		text-align: center;
-		padding: 1.125em 2em ;
-		color: var(--btn-color)!important;
-		text-decoration: none;
-		line-height: 1.1;
-		border-radius: var(--radius-small);
-		overflow: hidden;
-		background: var(--color--yellow);
-		white-space: nowrap;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		min-width: 148px;
+		padding: 0.95em 1.75em;
 		font-size: var(--text-sm);
-		font-weight: 600;
-		margin:0;
-		transition: all 0.35s;
-		border-radius:36px;
-		min-width: 144px;
-	}
- 	 a:hover{
-		border-color: var(--color--dark-yellow);
-		background-color: var(--color--dark-yellow);
-		box-shadow: 0 0 24px 11px rgba(247, 210, 82,.75);
-	}
-
-	/* Overlay for hover effects. */
-	a::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		transition: background-color var(--theme-transition);
-		mix-blend-mode: overlay;
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		line-height: 1.1;
+		text-decoration: none;
+		white-space: nowrap;
+		border-radius: var(--radius);
+		border: 1px solid transparent;
+		transition:
+			background-color 0.25s ease,
+			color 0.25s ease,
+			border-color 0.25s ease,
+			transform 0.25s ease;
 	}
 
-	a:focus::after,
-	a:hover::after {
-		background-color: hsla(var(--color-999-basis), 0.3);
+	.cta--primary {
+		background: var(--gallery-ink, #1a1a1a);
+		color: #f7f7f5 !important;
+		border-color: var(--gallery-ink, #1a1a1a);
 	}
 
+	.cta--primary:hover,
+	.cta--primary:focus-visible {
+		background: #2a2a2a;
+		border-color: #2a2a2a;
+		transform: translateY(-1px);
+	}
+
+	.cta--secondary {
+		background: transparent;
+		color: var(--gallery-ink, #1a1a1a) !important;
+		border-color: rgba(26, 26, 26, 0.35);
+	}
+
+	.cta--secondary:hover,
+	.cta--secondary:focus-visible {
+		border-color: var(--gallery-ink, #1a1a1a);
+		background: rgba(26, 26, 26, 0.04);
+		transform: translateY(-1px);
+	}
+
+	:global(.theme-dark) .cta--primary {
+		background: #f0f0ee;
+		color: #141414 !important;
+		border-color: #f0f0ee;
+	}
+
+	:global(.theme-dark) .cta--primary:hover,
+	:global(.theme-dark) .cta--primary:focus-visible {
+		background: #ffffff;
+		border-color: #ffffff;
+	}
+
+	:global(.theme-dark) .cta--secondary {
+		color: #f0f0ee !important;
+		border-color: rgba(240, 240, 238, 0.35);
+	}
+
+	:global(.theme-dark) .cta--secondary:hover,
+	:global(.theme-dark) .cta--secondary:focus-visible {
+		border-color: #f0f0ee;
+		background: rgba(240, 240, 238, 0.06);
+	}
 </style>

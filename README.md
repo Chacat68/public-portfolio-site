@@ -1,21 +1,16 @@
 
-
-# 设计师的个人网站 Designer Portfolio Site
+# 观世界 · 产品摄影作品集
 
 <a href="./README_EN.md" style="margin-bottom:16px">ENGLISH README</a>
 
-一个基于 Astro 的作品集与博客模板，适合设计师、独立开发者和个人品牌网站使用。
-
-<a href="https://ko-fi.com/T6T817U4KZ" target="_blank" style="display:inline-block;margin:.5rem auto 1rem;">
-  <img height="44" style="border:0;height:44px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" alt="Buy Me a Coffee at ko-fi.com">
-</a>
+基于 Astro 的摄影师个人站，定位为**产品展厅气质的获客站点**：首屏品牌 + 预约 CTA，作品网格展示摄影与视频，适合产品静物、空间场景与影像短片。
 
 ## 网站预览
 
-- 线上地址：[ricoui.com](https://ricoui.com/)
-- 仓库地址：[github.com/ricocc/public-portfolio-site](https://github.com/ricocc/public-portfolio-site)
+- 线上地址：以你的 `PUBLIC_SITE_URL` 为准
+- 仓库：本仓库
 
-<img src="public/preview.jpg" alt="Blog Preview" width="640" style="display:inline-block;margin:12px 0;">
+<img src="public/preview.jpg" alt="Site Preview" width="640" style="display:inline-block;margin:12px 0;">
 
 ## 技术栈
 
@@ -28,21 +23,22 @@
 - Sharp，用于 Astro 图片优化
 - pnpm
 
-## 近期修复（2026-07）
+## 近期改版（2026-07 · 产品展厅获客）
 
-- RSS：`publishDate` 字段对齐，stylesheet 移至顶层，标题改用站点博客配置
-- 构建：缺少 `PUBLIC_SITE_URL` 时直接失败，避免 sitemap/RSS 指向占位域名
-- 首页：Shuffle `data-groups` 拆成数组、修正 sizer（与卡片同列宽类并置于容器内）、去掉封面图多余括号
-- SEO/a11y：补齐 Open Graph、`lang="zh-CN"`、允许缩放、移动端主题切换、外链 `noopener`
+- **首页漏斗**：Hero（品牌「观世界」）→ 服务类型 → 精选作品 → 合作流程 → 联系预约
+- **视觉 token**：冷中性浅底、墨色 CTA、克制圆角；暗色主题去掉紫色渐变
+- **作品网格**：支持 `ratio` 灵活比例、去卡片化；筛选文案改为「精选 / 静物与空间 / 影像」
+- **获客**：微信弹层（`Wechat.astro`）+ 邮件 CTA；导航收敛为 首页 / 作品 / 关于（博客在页脚）
+- **内容清理**：移除设计师模板示例详情页与 3D 示例卡片
 
-### 字体选择
+### 视觉与字体
 
-中文标题字体： 汇文明朝体 <a href="https://tieba.baidu.com/p/7193815211" target="_blank">官方链接</a>
-
-正文字体：思源黑体 <a href="https://fonts.google.com/noto/specimen/Noto+Sans+SC?query=Noto+sans+sc" target="_blank">Google Font</a>
-
-英文字体：Special Elite   <a href="https://fonts.google.com/specimen/Special+Elite" target="_blank">Google Font</a>
-
+| 用途 | 选择 |
+|---|---|
+| 品牌 / 大标题 | 汇文明朝（`font-huiwen` / `--font-display`） |
+| 正文 | Noto Sans SC |
+| 背景 | `--gallery-atmosphere` 径向+线性浅灰氛围，避免纯平色 |
+| CTA | 墨色实心 / 线框次按钮（`CallToAction.astro`） |
 
 ## 启动项目
 
@@ -66,17 +62,30 @@ pnpm dev
 
 ```bash
 PUBLIC_SITE_URL=https://example.com/
-PUBLIC_SITE_NAME="Your Site Name"
+PUBLIC_SITE_NAME="观世界"
 PUBLIC_GA4_ID=
 PUBLIC_UMAMI_ID=
 ```
 
-- `PUBLIC_SITE_URL`：**必填**。网站公开地址，用于 sitemap、RSS 和 SEO 信息。未设置时构建会失败（不再回落到占位域名）。
+- `PUBLIC_SITE_URL`：**必填**。网站公开地址，用于 sitemap、RSS 和 SEO 信息。未设置时构建会失败。
 - `PUBLIC_SITE_NAME`：网站名称。
 - `PUBLIC_GA4_ID`：可选，Google Analytics 4 ID。
 - `PUBLIC_UMAMI_ID`：可选，Umami Website ID。
 
-如果不需要统计分析，可以留空 `PUBLIC_GA4_ID` 和 `PUBLIC_UMAMI_ID`。
+## 首页分区与组件
+
+| 分区 | 组件 | 说明 |
+|---|---|---|
+| 首屏 | `src/components/home/HeroShowcase.astro` | 全幅背景图 + 品牌名 + 一句定位 +「预约拍摄 / 浏览作品」 |
+| 服务 | `src/components/home/Services.astro` | 产品静物 / 空间场景 / 影像短片 |
+| 作品 | `Cards.astro` + `#works` | 筛选 + 灵活比例网格 + lightbox / B 站播放 |
+| 流程 | `src/components/home/Process.astro` | 沟通 → 拍摄 → 交付 |
+| 联系 | `src/components/home/ContactBand.astro` | 微信预约 + 邮件 |
+
+微信弹层：`src/components/Wechat.astro`（已挂到 `BaseLayout` / `BlogPostLayout`）。
+
+- 任意元素加 class `wechat` 即可打开弹层
+- 将二维码放到 `public/assets/wechat-qr.jpg`（也支持 `.png` / `.webp`）；构建时若文件不存在则**不请求图片**，弹层直接提示改用邮件 / B 站
 
 > **首页卡片 `category`**：支持逗号分隔多分类（如 `photography,recommend`），组件会拆成 JSON 数组供 Shuffle 筛选使用。
 
@@ -84,9 +93,9 @@ PUBLIC_UMAMI_ID=
 
 主要内容配置集中在 `src/data/`：
 
-- `src/data/content.ts`：站点基础信息、导航、SEO 文案、社交链接、页头文案等。社交链接在 `socialLinks` 中配置（当前含 B 站主页与 RSS）。
+- `src/data/content.ts`：站点基础信息、导航、SEO 文案、社交链接、筛选项、页头文案等。
 - `src/data/home.json`：首页作品卡片数据。
-- `src/data/project.ts`：项目列表页数据。
+- `src/data/project.ts`：`/project` 作品系列列表。
 
 首页作品数据示例：
 
@@ -97,48 +106,31 @@ PUBLIC_UMAMI_ID=
   "title": "厨房",
   "desc": "家装案例 — 厨房空间",
   "category": "photography,recommend",
-  "tag": "摄影",
+  "tag": "空间",
   "date": "2024-07-05",
-  "mark": true
+  "mark": true,
+  "ratio": "3/4",
+  "images": [
+    "https://example.com/01.jpg",
+    "https://example.com/02.jpg"
+  ]
 }
 ```
 
 字段说明：
 
-- `cover`：封面图路径，当前首页封面放在 `public/assets/cover/`。也可填写外部图片 URL；若外链有防盗链（如 B 站封面），页面已自动设置 `referrerpolicy="no-referrer"`，更稳妥的做法是下载到本地后引用。
-- `useVideo`：是否使用视频封面。
-- `title`：项目名称。
-- `desc`：项目描述。
-- `url`：项目线上地址。
-- `detail`：项目详情页路径，也可以填写外部链接。
-- `category`：筛选分类，多个分类用英文逗号分隔，例如 `photography,recommend`。首页筛选项对应：`recommend`（推荐）、`photography`（摄影）、`video`（视频）。
-- `tag`：卡片标签。
-- `date`：日期，用于展示和排序。
-- `mark`：是否显示推荐标记。
-- `opensource`：是否显示开源相关状态。
-- `hiRes`：摄影类作品的高清大图地址，点击封面后在弹层中加载。
-- `images`：摄影类作品的组图地址数组；填写后点击封面会弹出展示框，多于一张时自动显示左右切换（也可用键盘 `←` / `→`）。未填写或只有一张时，弹层显示放大 / 缩小按钮，适合长图浏览。
-- `video`：视频嵌入地址（如 B 站播放器链接），点击封面后在弹层中播放；填写后封面会显示播放按钮。
-
-摄影组图示例：
-
-```json
-{
-  "id": "photo-1",
-  "cover": "https://example.com/cover.jpg",
-  "title": "厨房",
-  "desc": "家装案例",
-  "category": "photography,recommend",
-  "tag": "摄影",
-  "date": "2026-06-24",
-  "mark": true,
-  "images": [
-    "https://example.com/01.jpg",
-    "https://example.com/02.jpg",
-    "https://example.com/03.jpg"
-  ]
-}
-```
+- `cover`：封面图路径或外部 URL；外链防盗链场景已设置 `referrerpolicy="no-referrer"`。
+- `title` / `desc`：标题与描述。
+- `url`：外链（可选）。
+- `detail`：详情或外链（可选）。
+- `category`：筛选分类，逗号分隔。对应筛选项：`recommend`（精选）、`photography`（静物与空间）、`video`（影像）。
+- `tag`：作品类型小标签。
+- `date`：日期。
+- `mark`：是否显示「精选」标记。
+- `ratio`：封面 CSS `aspect-ratio`，如 `3/4`、`16/9`、`1/1`；未填时摄影默认 `3/4`，有 `video` 时默认 `16/9`。
+- `hiRes`：高清大图；点击封面时在弹层加载。
+- `images`：组图数组；多于一张时可左右切换（键盘 `←` / `→`）。
+- `video`：B 站等嵌入播放器地址；封面显示细线播放示意。
 
 视频卡片示例：
 
@@ -149,99 +141,37 @@ PUBLIC_UMAMI_ID=
   "title": "作品标题",
   "desc": "",
   "category": "video,recommend",
-  "tag": "视频",
+  "tag": "影像",
   "date": "2026-06-24",
   "mark": true,
+  "ratio": "16/9",
   "video": "https://player.bilibili.com/player.html?bvid=BVxxxxxxxx"
 }
 ```
 
-摄影、视频作品若需出现在首页「推荐」筛选中，在 `category` 中追加 `recommend`，并设置 `mark: true` 显示推荐标记。首页「视频」筛选项对应 `category` 中包含 `video` 的卡片；带 `video` 字段的卡片点击封面会弹出全屏播放层，按 `Esc` 或点击遮罩关闭。弹层底部提供「在 B 站打开」备用链接。
+摄影、视频作品若需出现在「精选」筛选中，在 `category` 中追加 `recommend`，并设置 `mark: true`。带 `video` 字段的卡片点击封面会弹出全屏播放层。
 
-**控制台报错说明：** 嵌入 B 站播放器时，若浏览器安装了广告拦截插件（uBlock、AdGuard 等），可能出现 `ERR_BLOCKED_BY_CLIENT`、`gaia-gateway`、`bili-user-fingerprint` 等报错——这些来自 B 站 iframe 内部的统计/指纹脚本被拦截，**通常不影响播放**。若站内无法播放，可点击「在 B 站打开」跳转原视频页。
+**控制台报错说明：** 嵌入 B 站播放器时，若浏览器安装了广告拦截插件，可能出现 `ERR_BLOCKED_BY_CLIENT` 等报错——通常不影响播放。可点击「在 B 站打开」。
 
 ## 博客内容
-
-博客已经迁移到 Astro 6 Content Layer API。
 
 - 内容配置：`src/content.config.ts`
 - 博客目录：`src/content/blog/`
 - 支持格式：`*.md` 和 `*.mdx`
 
-文章 frontmatter 示例：
+博客入口在页脚「博客」，不占用主导航。正文图片支持 `BlogImageZoom` / `BlogImageGallery`。
 
-```yaml
----
-title: Article title
-description: Article description
-publishDate: 2026-06-07
-read: 5
-tags:
-  - Astro
-img: /preview-01.jpg
-img_alt: Preview image
----
-```
+## 作品系列页
 
-旧版 `src/content/config.ts` 已迁移为根目录下的 `src/content.config.ts`，并使用 `astro/loaders` 里的 `glob()` loader。
+`/project` 读取 `src/data/project.ts`。封面可为本地路径（`src/assets/projects/`）或完整 URL。`detail` / `url` 可指向首页 `#works`、外链或日后自建案例页。
 
-博客正文中的图片默认限制最大高度（`70vh`），避免长图占满整屏。点击图片可进入全屏预览，支持滚轮缩放、双指捏合、拖拽平移，以及工具栏上的放大 / 缩小 / 重置按钮；按 `Esc` 或点击遮罩关闭。相关组件：`src/components/BlogImageZoom.astro`。
-
-若需要「图片展示框」组图，可用 `BlogImageGallery`（MDX）或手写带 `data-gallery` 的容器。框内图片点击后弹出预览：
-
-- **单图**：显示放大 / 缩小按钮（适合长图）
-- **多图**：显示左右切换与计数（也可用键盘 `←` / `→`）
-
-```mdx
-import BlogImageGallery from '../../../components/BlogImageGallery.astro'
-
-<BlogImageGallery
-  caption="案例对比"
-  images={[
-    { src: 'https://example.com/a.jpg', alt: '图 A' },
-    { src: 'https://example.com/b.jpg', alt: '图 B' },
-  ]}
-/>
-```
-
-Markdown 写法：
-
-```html
-<div class="blog-gallery" data-gallery>
-  <img src="https://example.com/a.jpg" alt="图 A" />
-  <img src="https://example.com/b.jpg" alt="图 B" />
-</div>
-```
-
-组件文件：`src/components/BlogImageGallery.astro`。
-
-## 项目详情页
-
-项目详情页放在：
-
-```text
-src/pages/detail/
-```
-
-如果作品卡片的 `detail` 填写站内路径，例如 `/detail/todo`，需要在 `src/pages/detail/` 下创建对应的 `.astro` 页面。详情页中的本地图片列表已使用 `import.meta.glob()`，并配合 Astro 的 `<Image />` 组件处理图片。
-
-## GitHub Stars
-
-导航栏中的 GitHub star 徽章已默认隐藏。组件仍保留在 `src/components/GitHubStars.astro`，如需恢复，在 `Nav.astro` 与 `NavMobile.astro` 中重新引入即可。
-
-页面加载后会请求 GitHub 公共 API：
-
-```text
-https://api.github.com/repos/ricocc/public-portfolio-site
-```
-
-组件会使用仓库真实的 `stargazers_count` 更新页面上的 star 数量。未登录的 GitHub API 有访问频率限制，如果部署后访问量较大，建议改成带缓存的服务端接口。
+如需站内案例详情，可在 `src/pages/detail/` 下新建 `.astro` 页面。
 
 ## 字体
 
-- 中文正文：Noto Sans SC / 思源黑体
-- 英文字体：Special Elite / Inter / Inconsolata
-- 部分中文标题为了减少运行时字体体积，使用 SVG 方式嵌入。
+- 品牌 / 大标题：汇文明朝
+- 中文正文：Noto Sans SC
+- 英文点缀（可选）：Special Elite
 
 ## 项目结构
 
@@ -249,16 +179,17 @@ https://api.github.com/repos/ricocc/public-portfolio-site
 /
 ├─ public/
 │  ├─ assets/
-│  │  └─ cover/
+│  │  ├─ cover/
+│  │  └─ wechat-qr.jpg   # 可选，微信二维码
 │  ├─ plugins/
 │  └─ favicon.png
 ├─ src/
 │  ├─ assets/
 │  ├─ components/
+│  │  └─ home/           # Hero / Services / Process / ContactBand
 │  ├─ content/
 │  │  └─ blog/
 │  ├─ data/
-│  ├─ effects/
 │  ├─ layouts/
 │  ├─ pages/
 │  ├─ styles/
@@ -270,74 +201,19 @@ https://api.github.com/repos/ricocc/public-portfolio-site
 
 ## 部署
 
-项目会构建为静态站点：
-
 ```bash
 pnpm build
 ```
 
-构建产物位于 `dist/`，可以部署到 Netlify、Vercel、Cloudflare Pages、GitHub Pages 或其他静态托管平台。
-
-### Cloudflare Pages
-
-本项目为纯静态 Astro 站点，推荐部署到 **Cloudflare Workers（静态资源模式）** 或 **Cloudflare Pages**。
-
-#### 方式一：连接 Git 仓库（推荐）
-
-1. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → 连接 Git 仓库 `Chacat68/public-portfolio-site`
-2. 构建设置：
-
-| 配置项 | 值 |
-|--------|-----|
-| Framework preset | Astro |
-| Build command | `pnpm run build` |
-| Build output directory | `dist` |
-| Deploy command | `npx wrangler deploy` |
-| Node.js version | `22`（或使用 `.node-version`） |
-
-> **说明：** 仓库内 `wrangler.jsonc` 已声明 `assets.directory: "./dist"`，告知 Wrangler 这是纯静态站点，**不会**自动安装 `@astrojs/cloudflare` adapter。
-
-3. 在 **Environment variables** 中设置（Production 与 Preview 均需）：
-
-| 变量名 | 说明 |
-|--------|------|
-| `PUBLIC_SITE_URL` | **必填**，站点正式 URL，如 `https://your-domain.pages.dev` |
-| `PUBLIC_SITE_NAME` | 站点名称 |
-| `PUBLIC_GA4_ID` | （可选）Google Analytics 4 ID |
-| `PUBLIC_UMAMI_ID` | （可选）Umami 统计 ID |
-
-4. 保存后 Cloudflare 会在每次 push 到 `main` 时自动构建并部署。
-
-#### 方式二：Wrangler CLI 手动部署
+构建产物位于 `dist/`，推荐 Cloudflare Workers（静态资源）或 Pages。`wrangler.jsonc` 已声明 `assets.directory: "./dist"`。
 
 ```bash
-# 首次使用需登录 Cloudflare
 pnpm exec wrangler login
-
-# 配置环境变量后构建并部署
-cp .env.example .env   # 填写 PUBLIC_SITE_URL 等
+cp .env.example .env
 pnpm deploy
 ```
 
-部署成功后，默认地址为 `https://public-portfolio-site.<account>.workers.dev`，可在 Cloudflare Dashboard 中绑定自定义域名。
-
-
-
-## 关于作者
-
-我是 Rico，网页 / UI 设计师，目前主要专注于网页视觉和独立开发。我平时在博客 [Rico's Blog](https://blog.ricocc.com/) 更新内容，也可以关注我的小红书 [@Rico的设计漫想](https://www.xiaohongshu.com/user/profile/5f2b6903000000000101f51f) 和 X [@ricouii](https://x.com/ricouii)。
-
-## 其他模板
-
-- **SaaS Template**：[https://github.com/ricocc/ricoui-saas-template](https://github.com/ricocc/ricoui-saas-template)
-- **Portfolio Template**：[https://github.com/ricocc/ricoui-portfolio](https://github.com/ricocc/ricoui-portfolio)
-- **Blog Template**：[https://github.com/ricocc/public-portfolio-site](https://github.com/ricocc/public-portfolio-site)
-
-## 支持作者
-
-如果这个模板对你有帮助，一点点支持就可以继续激励我维护和创作，感谢。
-
-<img src="public/ricocc/zanshangma.jpg" alt="ricocc-wechat" width="280" style="display:inline-block;margin:12px 0;">
+必填环境变量：`PUBLIC_SITE_URL`。
 
 ## License
 

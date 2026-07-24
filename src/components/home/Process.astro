@@ -1,0 +1,109 @@
+---
+/**
+ * 合作流程：建立商业信任
+ */
+const steps = [
+	{
+		num: '01',
+		title: '沟通需求',
+		desc: '明确产品、场景、交付规格与档期，确认风格参考。',
+	},
+	{
+		num: '02',
+		title: '拍摄执行',
+		desc: '现场布光与构图，按清单完成主图、细节与氛围图。',
+	},
+	{
+		num: '03',
+		title: '精修交付',
+		desc: '色彩与细节精修后按约定格式交付，可配合二次微调。',
+	},
+];
+---
+
+<section class="process reveal-section" aria-labelledby="process-title">
+	<div class="container">
+		<header class="process__header">
+			<p class="process__eyebrow">流程</p>
+			<h2 id="process-title" class="process__title font-huiwen">合作如何推进</h2>
+		</header>
+		<ol class="process__list">
+			{steps.map((step) => (
+				<li class="process__item">
+					<span class="process__num">{step.num}</span>
+					<div>
+						<h3 class="process__item-title">{step.title}</h3>
+						<p class="process__item-desc">{step.desc}</p>
+					</div>
+				</li>
+			))}
+		</ol>
+	</div>
+</section>
+
+<style>
+	.process {
+		padding: 4rem 0;
+	}
+
+	.process__header {
+		margin-bottom: 2.5rem;
+	}
+
+	.process__eyebrow {
+		font-size: 0.75rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-400);
+		margin-bottom: 0.75rem;
+	}
+
+	.process__title {
+		font-size: clamp(1.75rem, 3vw, 2.25rem);
+		font-weight: 400;
+		color: var(--color-0);
+		letter-spacing: 0.04em;
+	}
+
+	.process__list {
+		list-style: none;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+		counter-reset: none;
+	}
+
+	.process__item {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--border);
+	}
+
+	.process__num {
+		font-size: 0.8rem;
+		letter-spacing: 0.14em;
+		color: var(--color-400);
+	}
+
+	.process__item-title {
+		font-size: 1.1rem;
+		font-weight: 500;
+		color: var(--color-100);
+		margin-bottom: 0.5rem;
+	}
+
+	.process__item-desc {
+		font-size: 0.925rem;
+		line-height: 1.7;
+		color: var(--color-300);
+	}
+
+	@media (max-width: 767px) {
+		.process__list {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+	}
+</style>
