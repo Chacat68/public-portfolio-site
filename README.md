@@ -151,6 +151,8 @@ PUBLIC_UMAMI_ID=
 
 摄影、视频作品若需出现在「精选」筛选中，在 `category` 中追加 `recommend`，并设置 `mark: true`。带 `video` 字段的卡片点击封面会弹出全屏播放层。
 
+**布局注意：** 作品网格由 Shuffle 通过元素的 `transform` 定位。卡片入场动画只能改 `opacity`，不能对 `.card-item` 使用 `transform`（含 `animation-fill-mode: forwards` 写回 `transform`），否则多张卡片会叠在同一位置，看起来像只显示一条。
+
 **控制台报错说明：** 嵌入 B 站播放器时，若浏览器安装了广告拦截插件，可能出现 `ERR_BLOCKED_BY_CLIENT` 等报错——通常不影响播放。可点击「在 B 站打开」。
 
 ## 博客内容
