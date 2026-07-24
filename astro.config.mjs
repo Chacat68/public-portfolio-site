@@ -29,15 +29,39 @@ function readDotEnv() {
 }
 
 const fileEnv = readDotEnv();
+
+/**
+ * 站点 URL 解析顺序：
+ * 1. PUBLIC_SITE_URL（本地 .env / Cloudflare Dashboard 构建变量）
+ * 2. CF_PAGES_URL（Cloudflare Pages 自动注入）
+ * 3. 公开默认地址（非密钥；CI 未配置变量时避免构建失败）
+ */
+const FALLBACK_SITE_URL = 'https://public-portfolio-site.pages.dev';
 const SITE_URL = (
   process.env.PUBLIC_SITE_URL ||
   fileEnv.PUBLIC_SITE_URL ||
+  process.env.CF_PAGES_URL ||
+  FALLBACK_SITE_URL ||
   ''
 ).trim();
 
 if (!SITE_URL) {
   throw new Error(
-    '缺少 PUBLIC_SITE_URL。请在 .env 中设置真实站点地址，例如 PUBLIC_SITE_URL=https://example.com/'
+    [
+      '缺少 PUBLIC_SITE_URL。',
+      '本地：在 .env 中设置，例如 PUBLIC_SITE_URL=https://example.com/',
+      'Cloudflare：Dashboard → 项目 Settings → Variables → 添加构建变量 PUBLIC_SITE_URL（Production 与 Preview 均需）',
+    ].join('\n')
+  );
+}
+
+if (
+  !process.env.PUBLIC_SITE_URL &&
+  !fileEnv.PUBLIC_SITE_URL &&
+  !process.env.CF_PAGES_URL
+) {
+  console.warn(
+    `[astro.config] 未检测到 PUBLIC_SITE_URL / CF_PAGES_URL，已回退到 ${FALLBACK_SITE_URL}。建议在 Cloudflare Dashboard 配置构建变量。`
   );
 }
 

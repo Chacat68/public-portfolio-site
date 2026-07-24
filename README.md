@@ -215,6 +215,20 @@ pnpm deploy
 
 必填环境变量：`PUBLIC_SITE_URL`。
 
+### Cloudflare 构建变量（重要）
+
+Git 连接自动部署时，CI **读不到** 本地 `.env`。请在 Cloudflare Dashboard 配置：
+
+1. 打开项目 → **Settings** → **Variables and Secrets**（或 Build → Environment variables）
+2. 为 **Production** 与 **Preview** 添加：
+
+| 变量名 | 示例值 |
+|--------|--------|
+| `PUBLIC_SITE_URL` | `https://public-portfolio-site.pages.dev`（或你的自定义域名） |
+| `PUBLIC_SITE_NAME` | `观世界` |
+
+未配置时，构建会回退到 `https://public-portfolio-site.pages.dev`，并在日志中打印警告。
+
 ## License
 
 [MIT](./LICENSE)
