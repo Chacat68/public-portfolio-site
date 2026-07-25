@@ -3,6 +3,8 @@ interface Props {
 	href?: string;
 	target?: string;
 	variant?: 'primary' | 'secondary';
+	/** 叠在深色影像底上时固定浅色描边，不受亮/暗主题影响 */
+	tone?: 'default' | 'on-dark';
 	class?: string;
 }
 
@@ -10,6 +12,7 @@ const {
 	href = '#',
 	target = '_self',
 	variant = 'primary',
+	tone = 'default',
 	class: className = '',
 } = Astro.props;
 const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
@@ -19,7 +22,7 @@ const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
 	href={href}
 	target={target}
 	rel={rel}
-	class:list={['cta', `cta--${variant}`, className]}
+	class:list={['cta', `cta--${variant}`, tone === 'on-dark' && 'cta--on-dark', className]}
 >
 	<slot />
 </a>
@@ -95,5 +98,26 @@ const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
 	:global(.theme-dark) .cta--secondary:focus-visible {
 		border-color: #f0f0ee;
 		background: rgba(240, 240, 238, 0.06);
+	}
+
+	/* 深色底上的次按钮：亮色主题下也保持浅色文字/描边 */
+	.cta--secondary.cta--on-dark {
+		color: #f7f7f5 !important;
+		border-color: rgba(247, 247, 245, 0.7);
+	}
+
+	.cta--secondary.cta--on-dark:hover,
+	.cta--secondary.cta--on-dark:focus-visible {
+		color: #ffffff !important;
+		border-color: #f7f7f5;
+		background: rgba(247, 247, 245, 0.12);
+	}
+
+	@media (max-width: 767.98px) {
+		.cta {
+			min-width: 0;
+			min-height: 44px;
+			padding: 0.9em 1.25em;
+		}
 	}
 </style>

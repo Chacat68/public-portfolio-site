@@ -95,11 +95,16 @@ const qrSrc = qrFile ? `/${qrFile}` : null;
 	.wechat-popup {
 		position: fixed;
 		inset: 0;
-		z-index: 10000;
+		z-index: 10060;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 1.5rem;
+		padding:
+			max(1rem, env(safe-area-inset-top, 0px))
+			max(1rem, env(safe-area-inset-right, 0px))
+			max(1rem, env(safe-area-inset-bottom, 0px))
+			max(1rem, env(safe-area-inset-left, 0px));
+		box-sizing: border-box;
 	}
 
 	.wechat-mask {
@@ -113,10 +118,13 @@ const qrSrc = qrFile ? `/${qrFile}` : null;
 		position: relative;
 		z-index: 1;
 		width: min(100%, 360px);
+		max-height: min(100dvh - 2rem, 640px);
+		overflow: auto;
 		padding: 2rem 1.75rem 1.75rem;
 		background: var(--color-999, #f7f7f5);
 		border: 1px solid var(--border, #ececec);
 		text-align: center;
+		box-sizing: border-box;
 	}
 
 	.wechat-close {

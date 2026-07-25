@@ -102,9 +102,16 @@ import CallToAction from '../CallToAction.astro';
 		border-color: #f0f0ee;
 	}
 
-	@media (max-width: 576px) {
+	@media (max-width: 767.98px) {
 		.contact-band {
 			padding: 3.5rem 0 4.5rem;
+		}
+
+		.contact-band__inner {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 1.5rem;
+			padding-top: 2rem;
 		}
 
 		.contact-band__actions {
@@ -113,6 +120,20 @@ import CallToAction from '../CallToAction.astro';
 
 		.cta,
 		:global(.contact-band .cta) {
+			flex: 1 1 calc(50% - 0.4rem);
+			min-width: 0;
+			min-height: 44px;
+		}
+	}
+
+	@media (max-width: 375px) {
+		.contact-band__actions {
+			flex-direction: column;
+		}
+
+		.cta,
+		:global(.contact-band .cta) {
+			width: 100%;
 			flex: 1 1 auto;
 		}
 	}

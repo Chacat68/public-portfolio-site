@@ -67,4 +67,16 @@ import { footerText } from '../data/content';
 	.group p{
 		text-align: center;
 	}
+
+	@media (max-width: 767.98px) {
+		footer {
+			margin-top: 1.25rem;
+			padding: 2rem 1rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
+			font-size: 0.8125rem;
+		}
+
+		.footer-links {
+			gap: 0.5rem;
+		}
+	}
 </style>

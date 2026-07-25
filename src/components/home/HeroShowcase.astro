@@ -35,7 +35,7 @@ const {
 		<p class="hero-showcase__support">{support}</p>
 		<div class="hero-showcase__actions">
 			<button type="button" class="cta cta--primary wechat">预约拍摄</button>
-			<CallToAction href="#works" variant="secondary">浏览作品</CallToAction>
+			<CallToAction href="#works" variant="secondary" tone="on-dark">浏览作品</CallToAction>
 		</div>
 	</div>
 </section>
@@ -44,6 +44,7 @@ const {
 	.hero-showcase {
 		position: relative;
 		min-height: calc(100svh - 64px);
+		min-height: calc(100dvh - 64px);
 		display: flex;
 		align-items: flex-end;
 		overflow: hidden;
@@ -78,8 +79,9 @@ const {
 		position: relative;
 		z-index: 1;
 		width: 100%;
-		padding: 4rem 0 5rem;
-		max-width: 42rem;
+		max-width: min(42rem, var(--max-width, calc(100% - 32px)));
+		padding: 4rem 1rem 5rem;
+		box-sizing: border-box;
 	}
 
 	.hero-showcase__brand {
@@ -154,16 +156,6 @@ const {
 		transform: translateY(-1px);
 	}
 
-	:global(.hero-showcase .cta--secondary) {
-		color: #f7f7f5 !important;
-		border-color: rgba(247, 247, 245, 0.45);
-	}
-
-	:global(.hero-showcase .cta--secondary:hover) {
-		border-color: #f7f7f5;
-		background: rgba(247, 247, 245, 0.08);
-	}
-
 	@keyframes hero-in {
 		to {
 			opacity: 1;
@@ -191,14 +183,28 @@ const {
 		}
 	}
 
-	@media (max-width: 767px) {
+	@media (max-width: 767.98px) {
 		.hero-showcase {
-			min-height: calc(100svh - 56px);
+			min-height: calc(100svh - 60px);
+			min-height: calc(100dvh - 60px);
 			align-items: flex-end;
 		}
 
 		.hero-showcase__content {
-			padding: 3rem 0 3.5rem;
+			padding: 2.5rem 1rem 3rem;
+		}
+
+		.hero-showcase__brand {
+			font-size: clamp(2.25rem, 12vw, 3.25rem);
+		}
+
+		.hero-showcase__headline {
+			letter-spacing: 0.08em;
+		}
+
+		.hero-showcase__support {
+			font-size: 0.9rem;
+			max-width: none;
 		}
 
 		.hero-showcase__actions {
@@ -207,6 +213,20 @@ const {
 
 		.cta,
 		:global(.hero-showcase .cta) {
+			flex: 1 1 calc(50% - 0.4rem);
+			min-width: 0;
+			min-height: 44px;
+		}
+	}
+
+	@media (max-width: 375px) {
+		.hero-showcase__actions {
+			flex-direction: column;
+		}
+
+		.cta,
+		:global(.hero-showcase .cta) {
+			width: 100%;
 			flex: 1 1 auto;
 		}
 	}

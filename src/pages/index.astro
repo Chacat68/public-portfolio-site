@@ -60,6 +60,20 @@ import { homeTdk } from '../data/content';
 		color: var(--color-300);
 		line-height: 1.6;
 	}
+
+	@media (max-width: 767.98px) {
+		.works-section {
+			padding: 1.5rem 0 0.5rem;
+		}
+
+		.works-section__header {
+			margin-bottom: 0.35rem;
+		}
+
+		.works-section__desc {
+			font-size: 0.875rem;
+		}
+	}
 </style>
 
 <script>
@@ -105,27 +119,21 @@ import { homeTdk } from '../data/content';
 </script>
 
 <style is:global>
-	/* 默认可见：无 JS 时内容始终可读 */
+	/* 默认可见：无 JS 时内容始终可读。
+	   入场只动 opacity，勿用 transform——否则会把内部 position:fixed（如 lightbox）钉在区块内，无法全屏。 */
 	.reveal-section {
 		opacity: 1;
-		transform: none;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
 		html[data-reveal='on'] .reveal-section:not(.is-visible) {
 			opacity: 0;
-			transform: translateY(18px);
-			transition:
-				opacity 0.7s ease,
-				transform 0.7s ease;
+			transition: opacity 0.7s ease;
 		}
 
 		html[data-reveal='on'] .reveal-section.is-visible {
 			opacity: 1;
-			transform: translateY(0);
-			transition:
-				opacity 0.7s ease,
-				transform 0.7s ease;
+			transition: opacity 0.7s ease;
 		}
 	}
 </style>

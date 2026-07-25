@@ -4,205 +4,219 @@ import ThemeToggle from './ThemeToggle.astro';
 ---
 
 <div class="mobile-header">
-	<div class="hamburger">
-		<div class="hamburger-toggle">
-				<span></span>
-		</div>
-
-	</div>
-	<div class="m-nav">
+	<button type="button" class="hamburger hamburger-toggle" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-nav">
+		<span></span>
+	</button>
+	<nav class="m-nav" id="mobile-nav" aria-label="移动端导航">
 		<div class="m-nav-wrap">
-				<ul class="m-menu">
-						{nav.items?.map(item => (
-							<li class="m-menu-li">
-								<a
-									aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
-									class:list={[
-										'm-menu__link l',
-										{
-											active: Astro.url.pathname === item.href ||
-												(item.href !== '/' && Astro.url.pathname.startsWith(item.href)),
-										},
-									]}
-									href={item.href}
-									target={item.target || '_self'}
-								>
-									{item.label}
-								</a>
-							</li>
-							))}
-							<li class="m-menu-li">
-									<div class="theme-toggle" style="transform:scale(1.1);" >
-										<ThemeToggle />
-									</div>
-							</li>
-				</ul>
+			<ul class="m-menu">
+				{nav.items?.map(item => (
+					<li class="m-menu-li">
+						<a
+							aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
+							class:list={[
+								'm-menu__link l',
+								{
+									active: Astro.url.pathname === item.href ||
+										(item.href !== '/' && Astro.url.pathname.startsWith(item.href)),
+								},
+							]}
+							href={item.href}
+							target={item.target || '_self'}
+						>
+							{item.label}
+						</a>
+					</li>
+				))}
+				<li class="m-menu-li">
+					<div class="theme-toggle">
+						<ThemeToggle />
+					</div>
+				</li>
+			</ul>
 		</div>
-
-	</div>
-	<div class="m-nav-mask"></div>
+	</nav>
+	<div class="m-nav-mask" hidden></div>
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const toggle = () => {
-      document.querySelector('.hamburger-toggle')?.classList.toggle('close-line');
-      document.querySelector('.m-nav')?.classList.toggle('is-active');
-      document.querySelector('.m-nav-mask')?.classList.toggle('is-active');
+    const btn = document.querySelector('.hamburger-toggle') as HTMLButtonElement | null;
+    const nav = document.querySelector('.m-nav');
+    const mask = document.querySelector('.m-nav-mask') as HTMLElement | null;
+    if (!btn || !nav || !mask) return;
+
+    const setOpen = (open: boolean) => {
+      btn.classList.toggle('close-line', open);
+      nav.classList.toggle('is-active', open);
+      mask.classList.toggle('is-active', open);
+      mask.hidden = !open;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
+      document.documentElement.classList.toggle('nav-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
     };
 
-    document.querySelector('.hamburger-toggle')?.addEventListener('click', toggle);
-    document.querySelector('.m-nav-mask')?.addEventListener('click', toggle);
+    btn.addEventListener('click', () => setOpen(!nav.classList.contains('is-active')));
+    mask.addEventListener('click', () => setOpen(false));
+    nav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
   });
 </script>
 <style lang="scss">
-	//mobile menu m-menu
-
-.pc-nav{
+.pc-nav {
   display: none;
 }
 
+@media (min-width: 768px) {
+  .mobile-header {
+    display: none;
+  }
+  .hamburger,
+  .m-nav,
+  .m-nav-mask {
+    display: none !important;
+  }
+}
 
-@media (min-width: 767px) {
-  .pc-nav{
-    display: flex;
-  }
-  .hamburger{display: none;}
-  .m-nav{display: none;}
-}
-.hamburger{
+.hamburger-toggle {
   position: relative;
-  z-index: 9999;
-  &-toggle{
-    -webkit-transition: all .3s;
-    transition: all .3s;
-    width: 60px;
-    height: 60px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    cursor: pointer;
-    span {
-          width: 18px !important;
-          width: 32px;
-          height: 2px;
-          display: block;
-          position: relative;
-          background: var(--color-100);
-          -webkit-transition: all .2s ease-out;
-          transition: all .2s ease-out;
-          &:before, &:after {
-              -webkit-transition: all .3s  ease-out;
-              transition: all .3s  ease-out;
-              content: "";
-              width: 26px;
-              height: 2px;
-              position: absolute;
-              left: 0;
-              background: var(--color-100);
-          }
-          &::before{
-            top: -9px !important;
-          }
-          &::after{
-            top: 9px !important;
-          }
-          }
+  z-index: 10001;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  transition: all 0.3s;
+
+  span {
+    width: 22px;
+    height: 2px;
+    display: block;
+    position: relative;
+    background: var(--color-100);
+    transition: all 0.2s ease-out;
+
+    &::before,
+    &::after {
+      content: "";
+      width: 22px;
+      height: 2px;
+      position: absolute;
+      left: 0;
+      background: var(--color-100);
+      transition: all 0.3s ease-out;
+    }
+
+    &::before {
+      top: -7px;
+    }
+
+    &::after {
+      top: 7px;
+    }
+  }
+
+  &.close-line span {
+    background: transparent;
+
+    &::before {
+      transform: rotate(45deg);
+      top: 0;
+    }
+
+    &::after {
+      transform: rotate(-45deg);
+      top: 0;
+    }
   }
 }
-.hamburger-toggle.close-line span {
-  width: 0px !important;
-  transform: translateX(-12px);
-}
-.hamburger-toggle.close-line span::before {
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-  top: 0 !important;
-  width: 36px !important;
-}
-.hamburger-toggle.close-line span::after {
-  -webkit-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-  top: 0 !important;
-  width: 36px !important;
-}
-.m-nav{
+
+.m-nav {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   background-color: var(--color-999);
-  transition: all .75s ease-in-out;
+  transition: transform 0.45s ease;
   transform: translateX(100%);
-  z-index:999;
-  overflow: hidden;
-  &.is-active{
-    transform: translateX(10%);
+  z-index: 10000;
+  overflow: auto;
+  padding:
+    max(5rem, calc(env(safe-area-inset-top, 0px) + 4rem))
+    max(1.5rem, env(safe-area-inset-right, 0px))
+    max(2rem, env(safe-area-inset-bottom, 0px))
+    max(1.5rem, env(safe-area-inset-left, 0px));
+  box-sizing: border-box;
+
+  &.is-active {
+    transform: translateX(0);
   }
 }
-.m-nav-wrap{
+
+.m-nav-wrap {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
-  z-index:99999;
-  margin-left: -20vw;
+  min-height: 60%;
 }
-.m-nav-mask{
+
+.m-nav-mask {
   position: fixed;
-  right: 0;
-  top:0;
-  bottom:0;
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
+  inset: 0;
   opacity: 0;
-  background-color: var(--accent-overlay);
-  z-index: 990;
-  transition: all 0.5s ease-in-out;
-  transition-delay: 0.15s;
-  width: 0%;
-  &.is-active{
+  background-color: rgba(0, 0, 0, 0.35);
+  z-index: 9990;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+
+  &[hidden] {
+    display: none !important;
+  }
+
+  &.is-active {
     opacity: 1;
-    width: 100%;
+    pointer-events: auto;
   }
 }
-.m-menu{
+
+.m-menu {
   position: relative;
-  margin-top:120px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 10px;
-  @media (max-height:600px) {
-    margin-top:8vh;
-  }
-  &-li{
+  gap: 0.25rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &-li {
     position: relative;
+    width: 100%;
     text-align: left;
-    padding:2vh 0;
-    vertical-align: middle;
-		text-decoration: none;
-		list-style: none;
-    a.m-menu__link{
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
+
+    a.m-menu__link {
       position: relative;
-      display: inline-block;
-			font-size:1.5rem;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-size: clamp(1.35rem, 5vw, 1.75rem);
+      color: var(--color-100);
+      text-decoration: none;
+
+      &.active {
+        color: var(--color-0);
+      }
     }
   }
-  &__icon{
-    width: 30px;
-    height: 30px;
-    margin-bottom: -2px;
-  }
 }
-
 </style>

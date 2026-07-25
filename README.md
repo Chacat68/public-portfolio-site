@@ -38,7 +38,17 @@
 | 品牌 / 大标题 | 汇文明朝（`font-huiwen` / `--font-display`） |
 | 正文 | Noto Sans SC |
 | 背景 | `--gallery-atmosphere` 径向+线性浅灰氛围，避免纯平色 |
-| CTA | 墨色实心 / 线框次按钮（`CallToAction.astro`） |
+| CTA | 墨色实心 / 线框次按钮（`CallToAction.astro`）；首屏深色底可用 `tone="on-dark"` 固定浅色描边 |
+
+### 响应式断点（移动端优先对齐）
+
+| Token | 宽度 | 用途 |
+|---|---|---|
+| `sm` | ≤576 | 极窄屏 CTA 纵向堆叠、字号微调 |
+| `md` | &lt;768 | 汉堡导航、单列流程/服务、筛选横滑、CTA 触控高度 44px |
+| `lg` | ≥768 / ≥992 | 桌面导航；作品 2→3 列（栅格 `col-md` / `col-lg`） |
+
+约定：组件内「手机/平板」统一用 `max-width: 767.98px`，与栅格 `min-width: 768px` 对齐；导航切换也对齐 768。作品 lightbox 按视口自动适配尺寸，组图支持左右滑动。
 
 ## 启动项目
 
@@ -76,7 +86,7 @@ PUBLIC_UMAMI_ID=
 
 | 分区 | 组件 | 说明 |
 |---|---|---|
-| 首屏 | `src/components/home/HeroShowcase.astro` | 全幅背景图 + 品牌名 + 一句定位 +「预约拍摄 / 浏览作品」 |
+| 首屏 | `src/components/home/HeroShowcase.astro` | 全幅背景图 + 品牌名 + 一句定位 +「预约拍摄 / 浏览作品」（次按钮 `tone="on-dark"`） |
 | 服务 | `src/components/home/Services.astro` | 产品静物 / 空间场景 / 影像短片 |
 | 作品 | `Cards.astro` + `#works` | 筛选 + 灵活比例网格 + lightbox / B 站播放 |
 | 流程 | `src/components/home/Process.astro` | 沟通 → 拍摄 → 交付 |
@@ -129,8 +139,10 @@ PUBLIC_UMAMI_ID=
 - `mark`：是否显示「精选」标记。
 - `ratio`：封面 CSS `aspect-ratio`，如 `3/4`、`16/9`、`1/1`；未填时摄影默认 `3/4`，有 `video` 时默认 `16/9`。
 - `hiRes`：高清大图；点击封面时在弹层加载。
-- `images`：组图数组；多于一张时可左右切换（键盘 `←` / `→`）。
+- `images`：组图数组；多于一张时可左右切换（键盘 `←` / `→`）。单张超长竖拼图（高宽比 > 2.2）按可用宽度铺满并纵向滚动。
 - `video`：B 站等嵌入播放器地址；封面显示细线播放示意。
+
+点击摄影封面会打开挂到 `document.body` 的全屏 lightbox（遮罩覆盖整页）。图片按当前视口自动适配到显示 100%（不提供手动缩放按钮；旋转/改窗口宽度会重新计算）。关闭：右上角 ×、点击空白处或 `Esc`。区块入场动画只改 `opacity`，避免祖先 `transform` 限制 `position: fixed`。
 
 视频卡片示例：
 
